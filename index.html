@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ballet Classe | バレエ教室検索</title>
-  <meta name="description" content="地域、メソッド、対象年齢、留学実績、コンクール実績からバレエ教室を検索できます。" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -21,29 +20,40 @@
     };
   </script>
 </head>
-<body class="min-h-screen bg-white text-slate-800">
+<body class="min-h-screen overflow-x-hidden bg-white text-slate-800">
   <header class="border-b border-pink-100 bg-white">
     <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-      <p class="text-sm font-medium text-roseDeep">Ballet Classe</p>
-      <h1 class="mt-1 text-3xl font-semibold text-slate-900 sm:text-4xl">バレエ教室検索</h1>
-      <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">地域、メソッド、対象年齢、留学実績、コンクール実績から、目的に合うバレエ教室を探せます。</p>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-medium text-roseDeep">Ballet Classe</p>
+          <h1 class="mt-1 text-3xl font-semibold text-slate-900 sm:text-4xl">バレエ教室検索</h1>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">地域、メソッド、対象年齢、留学実績、コンクール実績から、目的に合うバレエ教室を探せます。</p>
+        </div>
+        <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">プレミアム掲載の教室を優先表示</div>
+      </div>
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+  <main class="mx-auto max-w-7xl overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
     <section class="border-b border-pink-100 pb-6">
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
         <label class="block xl:col-span-2">
           <span class="text-sm font-medium text-slate-700">キーワード検索</span>
           <input id="filterKeyword" type="text" placeholder="教室名、特徴、住所など" class="mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100" />
         </label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">地域</span><select id="filterArea" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">メソッド</span><select id="filterMethod" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">対象年齢</span><select id="filterAge" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">留学国</span><select id="filterStudyCountry" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">留学先学校名</span><select id="filterStudySchool" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">入賞年</span><select id="filterContestYear" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
-        <label class="block"><span class="text-sm font-medium text-slate-700">コンクール名</span><select id="filterContestName" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm"></select></label>
+        <label class="block xl:col-span-2">
+          <span class="text-sm font-medium text-slate-700">最寄り駅</span>
+          <input id="filterNearestStation" type="text" placeholder="駅名で絞り込み" class="mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100" />
+        </label>
+      </div>
+
+      <button id="advancedFilterButton" type="button" class="mt-4 flex w-full items-center justify-between rounded-md border border-pink-200 bg-white px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft sm:inline-flex sm:w-auto sm:gap-3">
+        <span>詳細検索条件を表示する</span>
+        <span id="advancedFilterIcon" aria-hidden="true">+</span>
+      </button>
+
+      <div id="advancedFilterPanel" class="mt-4 hidden">
+        <div id="filterContainer" class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7"></div>
       </div>
 
       <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -53,394 +63,583 @@
     </section>
 
     <section class="py-6">
-      <div id="schoolList" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        
-<a href="school_1.html" data-school-id="school_1" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600" alt="エトワールバレエ" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">東京</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">ワガノワ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">エトワールバレエ</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">初めてバレエに触れるお子様から、趣味として楽しみたい大人の方まで、一人ひとりのペースに合わせて丁寧に指導します。アットホームな雰囲気の中で、踊る楽しさと豊かな表現力を身につけることができます。無理のないステップアップを目指すため、運動が苦手な方でも安心して始められます。無料体験レッスンも随時受け付けていますので、まずはスタジオの雰囲気を体感してみてください。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / プロ / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_2.html" data-school-id="school_2" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" alt="ローズバレエ" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">神奈川</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">RAD</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ローズバレエ</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">毎日の忙しさから離れ、美しくしなやかな身体を目指す大人のためのバレエスタジオです。姿勢改善や体幹の強化、柔軟性の向上など、それぞれの目的に合わせたクラスを用意しています。未経験からスタートした会員様が多く、基礎からじっくり学べる環境が整っています。駅からも近く、仕事帰りや休日のリフレッシュに最適な空間で、心地よい汗を流してみませんか。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_3.html" data-school-id="school_3" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=600" alt="クララバレエ" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">千葉</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">チェケッティ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">クララバレエ</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">プロを目指すジュニアから、さらなる技術向上を目指す経験者まで、質の高い指導を提供する本格派のバレエスクールです。国内外で活躍した実績を持つ講師陣が、一人ひとりの身体の特性を見極めながら、確かなテクニックと芸術性を引き出します。コンクールへの挑戦や留学のサポート体制も充実しており、高い目標に向かって互いに高め合える環境がここにあります。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 0件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_4.html" data-school-id="school_4" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600" alt="ルミエールバレエ埼玉" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">埼玉</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">RAD</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ルミエールバレエ埼玉</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">美しい姿勢と豊かな表現力を育むバレエスタジオです。小さなお子様から趣味の大人の方まで、英国RADメソッドに基づき基礎から丁寧に指導します。アットホームな雰囲気の中で、楽しく踊りながら体幹を鍛え、しなやかな体を作ります。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_5.html" data-school-id="school_5" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" alt="ソレイユバレエ大阪" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">大阪</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">ワガノワ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ソレイユバレエ大阪</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">プロを目指す本格的なジュニアから、基礎をしっかり学びたいお子様のためのスクールです。ワガノワメソッドに準拠した質の高いレッスンを提供し、国内外のコンクール入賞や留学を目指す生徒を全力でサポートします。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / プロ</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_6.html" data-school-id="school_6" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=600" alt="ミモザバレエ京都" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">京都</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">チェケッティ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ミモザバレエ京都</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">大人のための気品あるバレエスタジオです。初心者の方でも安心して始められるよう、チェケッティメソッドの基礎からゆっくり指導します。日常の忙しさから離れ、音楽に合わせて体を動かす心地よさを体験してください。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 0件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_7.html" data-school-id="school_7" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600" alt="アイリスバレエ兵庫" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">兵庫</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">パリ・オペラ座</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">アイリスバレエ兵庫</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">フランスのエレガントなバレエスタイルを学ぶことができるスタジオです。表現力と正確なテクニックを身につけるため、経験豊富な講師陣が一人ひとりに合わせた指導を行います。無料体験レッスンも随時開催しています。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_8.html" data-school-id="school_8" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" alt="エクラバレエ愛知" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">愛知</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">バランシン</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">エクラバレエ愛知</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">ダイナミックでスピーディーなバランシンメソッドを取り入れた、実践的なレッスンが特徴のスクールです。テクニックの向上はもちろん、音楽性と芸術性を最大限に引き出す指導で、ダンサーとしての可能性を広げます。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: ジュニア / プロ / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_9.html" data-school-id="school_9" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=600" alt="シルフィードバレエ福岡" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">福岡</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">RAD</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">シルフィードバレエ福岡</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">子どもたちの感性と健やかな身体を育てるバレエ教室です。リズム感を養いながら、正しい姿勢と柔軟性を自然に身につけていきます。お友達と一緒に楽しく踊りながら、協調性やマナーも学ぶことができます。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 0件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_10.html" data-school-id="school_10" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600" alt="オーロラバレエ北海道" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">北海道</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">ワガノワ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">オーロラバレエ北海道</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">北の大地で本格的なバレエを学びませんか。初心者から経験者まで、それぞれのレベルに応じた細やかなクラス編成が魅力です。舞台に立つ喜びを通じて、豊かな人間性と自信を身につけることを目指します。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 1件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_11.html" data-school-id="school_11" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" alt="ステラバレエ宮城" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">宮城</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">なし</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ステラバレエ宮城</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">仕事帰りや休日にリフレッシュしたい大人のための専用スタジオです。未経験から始めた方が多く、基本のステップから丁寧に教えるので安心です。健康維持、シェイプアップ、美しい立ち振る舞いなど、目的に合わせて通えます。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 0件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 0件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_12.html" data-school-id="school_12" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=600" alt="フローラバレエ広島" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">広島</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">チェケッティ</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">フローラバレエ広島</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">踊る楽しさを最優先に、基礎から応用まで体系的に学べるスクールです。一人ひとりの個性を大切にしながら、音楽に合わせた美しい表現力を引き出します。定期的な発表会で、日頃の練習の成果を披露する舞台もあります。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-
-<a href="school_13.html" data-school-id="school_13" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
-  <div class="relative">
-    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600" alt="ピルエットバレエ静岡" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-    
-  </div>
-  <div class="p-4">
-    <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-roseSoft text-roseDeep">静岡</span>
-      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-white text-slate-700 border border-pink-100">RAD</span>
-    </div>
-    <h2 class="mt-3 text-lg font-semibold text-slate-900">ピルエットバレエ静岡</h2>
-    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">国内外で豊富な経験を持つ講師が指導する本格的なスタジオです。小さなお子様の情操教育から、プロを目指す専門コース、大人の美容クラスまで幅広く対応しています。基礎を大切に、怪我のない体作りを重視します。</p>
-    <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      <span class="rounded-md bg-slate-50 px-2 py-1">対象: キッズ / ジュニア / プロ / 大人</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: 1件</span>
-      <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: 2件</span>
-    </div>
-  </div>
-</a>
-
-      </div>
+      <div id="schoolList" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
       <div id="emptyState" class="hidden rounded-md border border-pink-100 bg-roseSoft px-6 py-12 text-center">
         <p class="text-base font-medium text-slate-800">条件に合う教室が見つかりませんでした。</p>
         <p class="mt-2 text-sm text-slate-600">絞り込み条件を変更して再検索してください。</p>
       </div>
     </section>
-
-    <section class="border-t border-pink-100 py-6">
-      <h2 class="text-xl font-semibold text-slate-900">教室ページ一覧</h2>
-      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <a href="school_1.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">エトワールバレエの教室ページ</a>
-        <a href="school_2.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ローズバレエの教室ページ</a>
-        <a href="school_3.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">クララバレエの教室ページ</a>
-        <a href="school_4.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ルミエールバレエ埼玉の教室ページ</a>
-        <a href="school_5.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ソレイユバレエ大阪の教室ページ</a>
-        <a href="school_6.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ミモザバレエ京都の教室ページ</a>
-        <a href="school_7.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">アイリスバレエ兵庫の教室ページ</a>
-        <a href="school_8.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">エクラバレエ愛知の教室ページ</a>
-        <a href="school_9.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">シルフィードバレエ福岡の教室ページ</a>
-        <a href="school_10.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">オーロラバレエ北海道の教室ページ</a>
-        <a href="school_11.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ステラバレエ宮城の教室ページ</a>
-        <a href="school_12.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">フローラバレエ広島の教室ページ</a>
-        <a href="school_13.html" class="rounded-md border border-pink-100 px-4 py-3 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">ピルエットバレエ静岡の教室ページ</a>
-      </div>
-    </section>
   </main>
 
+  <div id="toast" class="fixed left-1/2 top-5 z-50 hidden w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-md border border-pink-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-lg"></div>
+
+  <div id="modal" class="fixed inset-0 z-40 hidden">
+    <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/45"></div>
+    <div class="relative flex min-h-full items-center justify-center p-4">
+      <article class="max-h-[92vh] w-full max-w-5xl overflow-x-hidden overflow-y-auto rounded-lg bg-white shadow-2xl">
+        <div class="relative">
+          <img id="modalImage" src="" alt="" class="h-64 w-full rounded-t-lg object-cover sm:h-80" />
+          <button id="closeModal" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl leading-none text-slate-700 shadow transition hover:bg-roseSoft" aria-label="閉じる">x</button>
+        </div>
+
+        <div class="p-5 sm:p-7">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div id="modalBadges" class="mb-3 flex flex-wrap gap-2"></div>
+              <h2 id="modalName" class="text-2xl font-semibold text-slate-900"></h2>
+              <p id="modalMeta" class="mt-2 text-sm text-slate-600"></p>
+            </div>
+            <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">クリック数: <span id="modalClickCount" class="font-semibold">0</span></div>
+          </div>
+
+          <div class="mt-6 grid gap-5">
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">基本情報</h3>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div>
+                  <dt class="font-medium text-slate-700">住所</dt>
+                  <dd id="modalAddress" class="mt-1 text-slate-600"></dd>
+                </div>
+                <div>
+                  <dt class="font-medium text-slate-700">最寄り駅</dt>
+                  <dd id="modalNearestStation" class="mt-1 text-slate-600"></dd>
+                </div>
+              </dl>
+            </section>
+
+            <p id="modalDescription" class="leading-7 text-slate-700"></p>
+
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">留学実績</h3>
+              <ul id="modalStudyList" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
+            </section>
+
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">コンクール実績</h3>
+              <div class="mt-4 hidden rounded-md border border-pink-100 md:block">
+                <table class="w-full min-w-[520px] border-collapse text-left text-sm">
+                  <thead class="bg-roseSoft text-roseDeep">
+                    <tr>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">入賞年</th>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">件数</th>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">コンクール名</th>
+                    </tr>
+                  </thead>
+                  <tbody id="modalContestTable" class="divide-y divide-pink-100 bg-white"></tbody>
+                </table>
+              </div>
+              <div id="modalContestCards" class="mt-4 grid gap-3 md:hidden"></div>
+            </section>
+
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">クラス・料金</h3>
+              <div class="mt-4">
+                <img id="modalClassImage" src="" alt="クラス・料金スケジュール" class="hidden h-auto w-full rounded-md object-contain" />
+                <p id="modalClassImageFallback" class="hidden text-sm text-slate-500">クラス情報は未設定です。</p>
+              </div>
+            </section>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p id="modalNotice" class="min-h-6 text-sm text-slate-600"></p>
+            <button id="officialButton" class="inline-flex items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200">公式サイトを見る</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
   <script>
-    const schools = [{"id": "school_1", "page": "school_1.html", "name": "エトワールバレエ", "area": "東京", "method": "ワガノワ", "ages": ["キッズ", "ジュニア", "プロ", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600", "description": "初めてバレエに触れるお子様から、趣味として楽しみたい大人の方まで、一人ひとりのペースに合わせて丁寧に指導します。アットホームな雰囲気の中で、踊る楽しさと豊かな表現力を身につけることができます。無理のないステップアップを目指すため、運動が苦手な方でも安心して始められます。無料体験レッスンも随時受け付けていますので、まずはスタジオの雰囲気を体感してみてください。", "address": "東京都渋谷区神宮前1-2-3", "affiliateUrl": "https://example.com/etoile", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+A", "studyRows": [{"country": "ロシア", "school": "ボリショイバレエ学校"}], "contestRows": [{"year": "2025", "count": "1件", "name": "ローザンヌ国際バレエコンクール"}, {"year": "2025", "count": "4件", "name": "(その他)国内コンクール"}]}, {"id": "school_2", "page": "school_2.html", "name": "ローズバレエ", "area": "神奈川", "method": "RAD", "ages": ["キッズ", "ジュニア"], "premium": false, "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600", "description": "毎日の忙しさから離れ、美しくしなやかな身体を目指す大人のためのバレエスタジオです。姿勢改善や体幹の強化、柔軟性の向上など、それぞれの目的に合わせたクラスを用意しています。未経験からスタートした会員様が多く、基礎からじっくり学べる環境が整っています。駅からも近く、仕事帰りや休日のリフレッシュに最適な空間で、心地よい汗を流してみませんか。", "address": "神奈川県横浜市中区元町4-5-6", "affiliateUrl": "https://example.com/rose", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+B", "studyRows": [{"country": "モナコ", "school": "プリンセスグレースアカデミー"}], "contestRows": [{"year": "2024", "count": "2件", "name": "(その他)国内コンクール"}]}, {"id": "school_3", "page": "school_3.html", "name": "クララバレエ", "area": "千葉", "method": "チェケッティ", "ages": ["ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1547153760-18fc86324498?w=600", "description": "プロを目指すジュニアから、さらなる技術向上を目指す経験者まで、質の高い指導を提供する本格派のバレエスクールです。国内外で活躍した実績を持つ講師陣が、一人ひとりの身体の特性を見極めながら、確かなテクニックと芸術性を引き出します。コンクールへの挑戦や留学のサポート体制も充実しており、高い目標に向かって互いに高め合える環境がここにあります。", "address": "千葉県船橋市本町7-8-9", "affiliateUrl": "https://example.com/clara", "classImage": "", "studyRows": [], "contestRows": [{"year": "2025", "count": "1件", "name": "YAGP"}]}, {"id": "school_4", "page": "school_4.html", "name": "ルミエールバレエ埼玉", "area": "埼玉", "method": "RAD", "ages": ["キッズ", "ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600", "description": "美しい姿勢と豊かな表現力を育むバレエスタジオです。小さなお子様から趣味の大人の方まで、英国RADメソッドに基づき基礎から丁寧に指導します。アットホームな雰囲気の中で、楽しく踊りながら体幹を鍛え、しなやかな体を作ります。", "address": "埼玉県さいたま市大宮区高鼻町1-2-3", "affiliateUrl": "https://example.com/lumiere", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+E", "studyRows": [{"country": "イギリス", "school": "ロイヤルバレエ学校"}], "contestRows": [{"year": "2025", "count": "2件", "name": "国内バレエコンクール"}, {"year": "2024", "count": "1件", "name": "国際コンクール"}]}, {"id": "school_5", "page": "school_5.html", "name": "ソレイユバレエ大阪", "area": "大阪", "method": "ワガノワ", "ages": ["キッズ", "ジュニア", "プロ"], "premium": false, "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600", "description": "プロを目指す本格的なジュニアから、基礎をしっかり学びたいお子様のためのスクールです。ワガノワメソッドに準拠した質の高いレッスンを提供し、国内外のコンクール入賞や留学を目指す生徒を全力でサポートします。", "address": "大阪府大阪市北区梅田2-3-4", "affiliateUrl": "https://example.com/soleil", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+F", "studyRows": [{"country": "ロシア", "school": "ワガノワバレエアカデミー"}], "contestRows": [{"year": "2025", "count": "3件", "name": "YAGP"}, {"year": "2024", "count": "2件", "name": "ローザンヌ国際バレエコンクール"}]}, {"id": "school_6", "page": "school_6.html", "name": "ミモザバレエ京都", "area": "京都", "method": "チェケッティ", "ages": ["ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1547153760-18fc86324498?w=600", "description": "大人のための気品あるバレエスタジオです。初心者の方でも安心して始められるよう、チェケッティメソッドの基礎からゆっくり指導します。日常の忙しさから離れ、音楽に合わせて体を動かす心地よさを体験してください。", "address": "京都府京都市中京区烏丸通1-2", "affiliateUrl": "https://example.com/mimosa", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+G", "studyRows": [], "contestRows": [{"year": "2025", "count": "1件", "name": "国内コンクール"}]}, {"id": "school_7", "page": "school_7.html", "name": "アイリスバレエ兵庫", "area": "兵庫", "method": "パリ・オペラ座", "ages": ["キッズ", "ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600", "description": "フランスのエレガントなバレエスタイルを学ぶことができるスタジオです。表現力と正確なテクニックを身につけるため、経験豊富な講師陣が一人ひとりに合わせた指導を行います。無料体験レッスンも随時開催しています。", "address": "兵庫県神戸市中央区三宮町3-4-5", "affiliateUrl": "https://example.com/iris", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+H", "studyRows": [{"country": "フランス", "school": "パリ・オペラ座バレエ学校"}], "contestRows": [{"year": "2024", "count": "1件", "name": "国際バレエコンクール"}, {"year": "2023", "count": "2件", "name": "国内コンクール"}]}, {"id": "school_8", "page": "school_8.html", "name": "エクラバレエ愛知", "area": "愛知", "method": "バランシン", "ages": ["ジュニア", "プロ", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600", "description": "ダイナミックでスピーディーなバランシンメソッドを取り入れた、実践的なレッスンが特徴のスクールです。テクニックの向上はもちろん、音楽性と芸術性を最大限に引き出す指導で、ダンサーとしての可能性を広げます。", "address": "愛知県名古屋市中村区名駅4-5-6", "affiliateUrl": "https://example.com/eclat", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+I", "studyRows": [{"country": "アメリカ", "school": "スクールオブアメリカンバレエ"}], "contestRows": [{"year": "2025", "count": "2件", "name": "YAGP"}]}, {"id": "school_9", "page": "school_9.html", "name": "シルフィードバレエ福岡", "area": "福岡", "method": "RAD", "ages": ["キッズ", "ジュニア"], "premium": false, "image": "https://images.unsplash.com/photo-1547153760-18fc86324498?w=600", "description": "子どもたちの感性と健やかな身体を育てるバレエ教室です。リズム感を養いながら、正しい姿勢と柔軟性を自然に身につけていきます。お友達と一緒に楽しく踊りながら、協調性やマナーも学ぶことができます。", "address": "福岡県福岡市中央区天神2-3-4", "affiliateUrl": "https://example.com/sylphide", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+J", "studyRows": [], "contestRows": [{"year": "2025", "count": "1件", "name": "国内バレエコンクール"}]}, {"id": "school_10", "page": "school_10.html", "name": "オーロラバレエ北海道", "area": "北海道", "method": "ワガノワ", "ages": ["キッズ", "ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600", "description": "北の大地で本格的なバレエを学びませんか。初心者から経験者まで、それぞれのレベルに応じた細やかなクラス編成が魅力です。舞台に立つ喜びを通じて、豊かな人間性と自信を身につけることを目指します。", "address": "北海道札幌市中央区北1条西2-3", "affiliateUrl": "https://example.com/aurora", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+K", "studyRows": [{"country": "カナダ", "school": "カナダ国立バレエ学校"}], "contestRows": [{"year": "2024", "count": "1件", "name": "国内コンクール"}]}, {"id": "school_11", "page": "school_11.html", "name": "ステラバレエ宮城", "area": "宮城", "method": "なし", "ages": ["大人"], "premium": false, "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600", "description": "仕事帰りや休日にリフレッシュしたい大人のための専用スタジオです。未経験から始めた方が多く、基本のステップから丁寧に教えるので安心です。健康維持、シェイプアップ、美しい立ち振る舞いなど、目的に合わせて通えます。", "address": "宮城県仙台市青葉区中央1-2-3", "affiliateUrl": "https://example.com/stella", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+L", "studyRows": [], "contestRows": []}, {"id": "school_12", "page": "school_12.html", "name": "フローラバレエ広島", "area": "広島", "method": "チェケッティ", "ages": ["キッズ", "ジュニア", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1547153760-18fc86324498?w=600", "description": "踊る楽しさを最優先に、基礎から応用まで体系的に学べるスクールです。一人ひとりの個性を大切にしながら、音楽に合わせた美しい表現力を引き出します。定期的な発表会で、日頃の練習の成果を披露する舞台もあります。", "address": "広島県広島市中区紙屋町1-2-3", "affiliateUrl": "https://example.com/flora", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+M", "studyRows": [{"country": "ドイツ", "school": "ジョンクランコバレエ学校"}], "contestRows": [{"year": "2025", "count": "1件", "name": "国内コンクール"}, {"year": "2024", "count": "1件", "name": "YAGP"}]}, {"id": "school_13", "page": "school_13.html", "name": "ピルエットバレエ静岡", "area": "静岡", "method": "RAD", "ages": ["キッズ", "ジュニア", "プロ", "大人"], "premium": false, "image": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600", "description": "国内外で豊富な経験を持つ講師が指導する本格的なスタジオです。小さなお子様の情操教育から、プロを目指す専門コース、大人の美容クラスまで幅広く対応しています。基礎を大切に、怪我のない体作りを重視します。", "address": "静岡県静岡市葵区追手町1-2-3", "affiliateUrl": "https://example.com/pirouette", "classImage": "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+N", "studyRows": [{"country": "オーストラリア", "school": "オーストラリアンバレエ学校"}], "contestRows": [{"year": "2025", "count": "2件", "name": "ローザンヌ国際バレエコンクール"}, {"year": "2024", "count": "3件", "name": "国内コンクール"}]}];
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQTRJBKeLkQzW-D4slg8VHrjm1OCLiSfLl1Xo-anVUwHdMo76pcIrma12gthzffeMtP_o4AYSOKRuN/pub?output=csv";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyxeiO-Agv70G28dxpNFO5JvEwPhs0506Csq8SWHTuXKxJr1PixEI8_I5PcI7xtr8sy/exec";
     const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=1400&q=80";
+    const SAMPLE_SCHOOLS = [
+      {
+        id: "sample-tokyo-1",
+        name: "Ballet Classe 表参道",
+        area: "東京都",
+        method: "ワガノワ",
+        ages: ["幼児", "小学生", "中高生"],
+        premium: true,
+        image: FALLBACK_IMAGE,
+        description: "基礎から舞台経験まで、年齢と目的に合わせて丁寧に学べるバレエ教室です。",
+        address: "東京都渋谷区神宮前1-1-1",
+        station: "表参道駅",
+        affiliateUrl: "https://example.com",
+        classImage: "https://placehold.co/1000x520/fff1f5/be2f67?text=Class+Schedule+and+Fees",
+        classRows: [
+          { className: "ジュニア基礎", day: "月・水", days: "週2回", price: "月額 12,000円" },
+          { className: "コンクール育成", day: "土", days: "週1回", price: "月額 16,000円" }
+        ],
+        studyRows: [
+          { country: "イギリス", school: "Royal Ballet School" },
+          { country: "ドイツ", school: "John Cranko Schule" }
+        ],
+        contestRows: [
+          { year: "2025", count: "3件", name: "YAGP Japan" },
+          { year: "2024", count: "5件", name: "(その他)国内コンクール" }
+        ]
+      },
+      {
+        id: "sample-osaka-1",
+        name: "Sakura Ballet Studio",
+        area: "大阪府",
+        method: "RAD",
+        ages: ["小学生", "大人"],
+        premium: false,
+        image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1400&q=80",
+        description: "趣味で楽しむ方から本格的に学びたい方まで通いやすい少人数制スタジオです。",
+        address: "大阪府大阪市北区梅田1-1-1",
+        station: "梅田駅",
+        affiliateUrl: "https://example.com",
+        classImage: "",
+        classRows: [
+          { className: "大人オープン", day: "火・金", days: "チケット制", price: "1回 2,500円" }
+        ],
+        studyRows: [],
+        contestRows: [
+          { year: "2023", count: "2件", name: "NAMUE バレエコンクール" }
+        ]
+      }
+    ];
 
     const $ = (id) => document.getElementById(id);
-    const filters = {
-      area: $("filterArea"),
-      method: $("filterMethod"),
-      age: $("filterAge"),
-      studyCountry: $("filterStudyCountry"),
-      studySchool: $("filterStudySchool"),
-      contestYear: $("filterContestYear"),
-      contestName: $("filterContestName")
-    };
+    let schools = [];
+    let currentSchool = null;
 
-    const filterSources = {
-      area: (s) => [s.area],
-      method: (s) => [s.method],
-      age: (s) => s.ages,
-      studyCountry: (s) => s.studyRows.map((x) => x.country),
-      studySchool: (s) => s.studyRows.map((x) => x.school),
-      contestYear: (s) => s.contestRows.map((x) => x.year),
-      contestName: (s) => s.contestRows.map((x) => x.name)
-    };
+    const els = {};
+    [
+      "filterKeyword:keyword",
+      "filterNearestStation:nearestStation",
+      "advancedFilterButton:advancedButton",
+      "advancedFilterIcon:advancedIcon",
+      "advancedFilterPanel:advancedPanel",
+      "schoolList:list",
+      "resultCount:count",
+      "emptyState:empty",
+      "toast:toast",
+      "modal:modal",
+      "modalBackdrop:backdrop",
+      "modalImage:modalImage",
+      "closeModal:closeModal",
+      "modalBadges:modalBadges",
+      "modalName:modalName",
+      "modalMeta:modalMeta",
+      "modalClickCount:modalClickCount",
+      "modalDescription:modalDescription",
+      "modalAddress:modalAddress",
+      "modalNearestStation:modalNearestStation",
+      "modalClassImage:classImage",
+      "modalClassImageFallback:classImageFallback",
+      "modalStudyList:studyList",
+      "modalContestTable:contestTable",
+      "modalContestCards:contestCards",
+      "modalNotice:notice",
+      "officialButton:official"
+    ].forEach((x) => {
+      const [id, key] = x.split(":");
+      els[key] = $(id);
+    });
 
+    const filterConfigs = [
+      { id: "Area", label: "地域", src: (s) => [s.area], control: "select" },
+      { id: "Method", label: "メソッド", src: (s) => [s.method], control: "select" },
+      { id: "Age", label: "対象年齢", src: (s) => s.ages, control: "select" },
+      { id: "StudyCountry", label: "留学国", src: (s) => s.studyRows.map((x) => x.country), control: "select" },
+      { id: "StudySchool", label: "留学先学校名", src: (s) => s.studyRows.map((x) => x.school), control: "select" },
+      { id: "ContestYear", label: "入賞年", src: (s) => s.contestRows.map((x) => x.year), control: "select" },
+      { id: "ContestName", label: "コンクール名", src: (s) => s.contestRows.map((x) => x.name), control: "select" }
+    ];
+
+    const filters = {};
+    const inputClass = "mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100";
+
+    filterConfigs.forEach((c) => {
+      const label = document.createElement("label");
+      label.className = "block";
+      const control = c.control === "text"
+        ? `<input id="filter${c.id}" type="text" placeholder="${c.placeholder || c.label}" class="${inputClass}" />`
+        : `<select id="filter${c.id}" class="${inputClass}"></select>`;
+      label.innerHTML = `<span class="text-sm font-medium text-slate-700">${c.label}</span>${control}`;
+      $("filterContainer").append(label);
+      filters[c.id.toLowerCase()] = $(`filter${c.id}`);
+    });
+
+    const normalizeKey = (v) => String(v || "").trim().replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/　/g, " ").replace(/\s+/g, "");
+    const normalizeSearch = (v) => normalizeKey(v).toLowerCase();
     const escapeHTML = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     const uniq = (values) => [...new Set(values.filter((v) => String(v || "").trim() && v !== "-"))].sort((a, b) => String(a).localeCompare(String(b), "ja"));
     const badge = (text, cls) => `<span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${cls}">${escapeHTML(text)}</span>`;
+    const hasMeaningfulValue = (v) => {
+      const text = String(v || "").trim();
+      return text && text !== "-";
+    };
 
-    function setOptions(select, values) {
-      select.innerHTML = '<option value="">すべて</option>';
-      uniq(values).forEach((value) => select.append(new Option(value, value)));
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const n = text[i + 1];
+        if (c === '"' && quoted && n === '"') {
+          value += '"';
+          i++;
+        } else if (c === '"') {
+          quoted = !quoted;
+        } else if (c === "," && !quoted) {
+          row.push(value.trim());
+          value = "";
+        } else if ((c === "\n" || c === "\r") && !quoted) {
+          if (c === "\r" && n === "\n") i++;
+          row.push(value.trim());
+          if (row.some(Boolean)) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += c;
+        }
+      }
+      row.push(value.trim());
+      if (row.some(Boolean)) rows.push(row);
+      return rows;
+    }
+
+    function getField(row, keys) {
+      for (const key of keys) {
+        const value = row[normalizeKey(key)];
+        if (value !== undefined && String(value).trim()) return String(value).trim();
+      }
+      return "";
+    }
+
+    const collectRows = (row, fields, map, skip, fallback) => {
+      const res = [];
+      const indexes = [];
+      const detectedIndexes = Object.keys(row).flatMap((key) => (key.match(/\d+/g) || []).map(Number)).filter((n) => Number.isFinite(n) && n > 0);
+      const groupLimit = Math.max(Object.keys(row).length, ...detectedIndexes, 0);
+      for (let i = 1; i <= groupLimit; i++) {
+        const item = Object.fromEntries(Object.entries(fields).map(([p, f]) => [p, getField(row, f(i))]));
+        if (Object.values(item).some(hasMeaningfulValue)) indexes.push(item);
+      }
+      indexes.forEach((item) => {
+        if (!skip || !skip(item)) res.push(map(item));
+      });
+      return res.length ? res : (fallback || []);
+    };
+
+    function rowsToSchools(csvRows) {
+      if (csvRows.length < 2) return [];
+      const headers = csvRows[0].map(normalizeKey);
+      return csvRows.slice(1).map((cells, index) => {
+        const row = {};
+        headers.forEach((h, i) => {
+          const value = String(cells[i] || "").trim();
+          if (h && value) row[h] = value;
+        });
+        const name = getField(row, ["教室名", "名前", "name", "schoolName"]);
+        return {
+          id: getField(row, ["ID", "id"]) || `${name || "school"}-${index + 1}`,
+          name,
+          area: getField(row, ["地域", "area", "prefecture"]),
+          method: getField(row, ["メソッド", "method"]),
+          ages: getField(row, ["対象年齢", "年齢", "ages", "age"]).split(/\s+/).filter(Boolean),
+          premium: ["true", "1", "yes", "あり", "有料", "プレミアム", "premium", "おすすめ"].includes(getField(row, ["プレミアム", "おすすめ", "premium", "plan"]).toLowerCase()),
+          image: getField(row, ["画像URL", "画像", "image", "imageUrl", "image_url"]),
+          description: getField(row, ["説明文", "説明", "description"]),
+          address: getField(row, ["住所", "address"]),
+          station: getField(row, ["最寄り駅", "駅", "station"]),
+          affiliateUrl: getField(row, ["公式サイトURL", "公式サイト", "affiliateUrl", "officialUrl", "url"]),
+          classImage: getField(row, ["クラス画像URL", "料金表画像URL", "スケジュール画像URL", "スケジュール画像", "classImageUrl", "classImage"]),
+          classRows: collectRows(row, {
+            className: (i) => [`クラス${i}名`, `クラス${i}`, `class${i}Name`, `class${i}`],
+            day: (i) => [`クラス${i}曜日`, `クラス${i}曜`, `class${i}Day`],
+            days: (i) => [`クラス${i}日数`, `class${i}Days`, `class${i}Count`],
+            price: (i) => [`クラス${i}料金`, `クラス${i}月謝`, `class${i}Price`, `class${i}Fee`]
+          }, (x) => ({ className: x.className || "-", day: x.day || "-", days: x.days || "-", price: x.price || "-" }), null, [{ className: "未設定", day: "-", days: "-", price: "-" }]),
+          studyRows: collectRows(row, {
+            country: (i) => [`留学${i}国名`, `留学${i}国`, `留学国${i}`, `study${i}Country`],
+            school: (i) => [`留学${i}学校名`, `留学${i}学校`, `留学先${i}学校名`, `留学先学校名${i}`, `study${i}School`]
+          }, (x) => ({ country: x.country || "-", school: x.school || "-" }), (x) => x.country === "なし" || x.school === "なし"),
+          contestRows: collectRows(row, {
+            year: (i) => [`コンクール${i}入賞年`, `コンクール${i}年`, `入賞年${i}`, `contest${i}Year`],
+            count: (i) => [`コンクール${i}件数`, `入賞${i}件数`, `件数${i}`, `contest${i}Count`],
+            name: (i) => [`コンクール${i}名`, `コンクール名${i}`, `contest${i}Name`]
+          }, (x) => ({ year: x.year || "-", count: x.count || "-", name: x.name === "国内コンクール" ? "(その他)国内コンクール" : (x.name || "-") }), (x) => x.name === "なし")
+        };
+      }).filter((s) => s.name);
+    }
+
+    function setOptions(control, values) {
+      if (control.tagName !== "SELECT") return;
+      const current = control.value;
+      control.innerHTML = '<option value="">すべて</option>';
+      uniq(values).forEach((value) => control.append(new Option(value, value)));
+      if ([...control.options].some((o) => o.value === current)) control.value = current;
     }
 
     function buildFilters() {
-      Object.entries(filters).forEach(([key, select]) => setOptions(select, schools.flatMap(filterSources[key])));
+      filterConfigs.forEach((c) => setOptions(filters[c.id.toLowerCase()], schools.flatMap(c.src)));
+    }
+
+    function matchesKeyword(s, keyword) {
+      if (!keyword) return true;
+      const basicFields = [s.name, s.description, s.address, s.station, s.area, s.method, s.ages.join(" ")].map(normalizeSearch);
+      if (basicFields.some((text) => text.includes(keyword))) return true;
+
+      const studyHit = s.studyRows.some((x) => [x.country, x.school].some((v) => normalizeSearch(v).includes(keyword)));
+      const contestHit = s.contestRows.some((x) => [x.year, x.count, x.name].some((v) => normalizeSearch(v).includes(keyword)));
+      return studyHit || contestHit;
+    }
+
+    function matchesFilter(s, config) {
+      const control = filters[config.id.toLowerCase()];
+      const value = String(control.value || "").trim();
+      if (!value) return true;
+      const values = config.src(s).map(String);
+      if (control.tagName === "INPUT") {
+        const query = normalizeSearch(value);
+        return values.some((v) => normalizeSearch(v).includes(query));
+      }
+      return values.includes(value);
     }
 
     function filteredSchools() {
-      const keyword = $("filterKeyword").value.trim().toLowerCase();
+      const keyword = normalizeSearch(els.keyword.value);
+      const nearestStation = normalizeSearch(els.nearestStation.value);
       return schools
-        .filter((s) => !keyword || [
-          s.name, s.description, s.address, s.area, s.method, s.ages.join(" "),
-          s.studyRows.map((x) => `${x.country} ${x.school}`).join(" "),
-          s.contestRows.map((x) => `${x.year} ${x.count} ${x.name}`).join(" ")
-        ].join(" ").toLowerCase().includes(keyword))
-        .filter((s) => Object.entries(filters).every(([key, select]) => !select.value || filterSources[key](s).includes(select.value)))
+        .filter((s) => matchesKeyword(s, keyword))
+        .filter((s) => !nearestStation || normalizeSearch(s.station).includes(nearestStation))
+        .filter((s) => filterConfigs.every((c) => matchesFilter(s, c)))
         .sort((a, b) => Number(b.premium) - Number(a.premium));
     }
 
-    function cardHTML(s) {
-      return `
-        <a href="${escapeHTML(s.page)}" data-school-id="${escapeHTML(s.id)}" class="school-card group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md">
+    function renderSchools() {
+      const results = filteredSchools();
+      els.list.innerHTML = "";
+      els.count.textContent = `${results.length}件の教室が見つかりました`;
+      els.empty.classList.toggle("hidden", results.length !== 0);
+      results.forEach((s) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md";
+        card.onclick = () => openModal(s.id);
+        card.innerHTML = `
           <div class="relative">
             <img src="${escapeHTML(s.image || FALLBACK_IMAGE)}" alt="${escapeHTML(s.name)}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
             ${s.premium ? `<div class="absolute left-3 top-3">${badge("おすすめ", "bg-roseMain text-white shadow")}</div>` : ""}
           </div>
           <div class="p-4">
-            <div class="flex flex-wrap gap-2">${badge(s.area || "地域未設定", "bg-roseSoft text-roseDeep")} ${badge(s.method || "メソッド未設定", "bg-white text-slate-700 border border-pink-100")}</div>
+            <div class="flex flex-wrap gap-2">${badge(s.area || "地域未設定", "bg-roseSoft text-roseDeep")}${badge(s.method || "メソッド未設定", "bg-white text-slate-700 border border-pink-100")}</div>
             <h2 class="mt-3 text-lg font-semibold text-slate-900">${escapeHTML(s.name)}</h2>
             <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">${escapeHTML(s.description || "")}</p>
             <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="rounded-md bg-slate-50 px-2 py-1">最寄り駅: ${escapeHTML(s.station || "駅未設定")}</span>
               <span class="rounded-md bg-slate-50 px-2 py-1">対象: ${escapeHTML(s.ages.join(" / ") || "未設定")}</span>
               <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: ${s.studyRows.length}件</span>
               <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: ${s.contestRows.length}件</span>
             </div>
+          </div>`;
+        els.list.append(card);
+      });
+    }
+
+    function renderTable(tbody, rows, cells, emptyText) {
+      tbody.innerHTML = "";
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="${cells.length}" class="px-4 py-3 text-center text-slate-500">${emptyText}</td></tr>`;
+        return;
+      }
+      rows.forEach((row, i) => {
+        const tr = document.createElement("tr");
+        tr.className = i % 2 ? "bg-roseSoft/40" : "bg-white";
+        cells.forEach(({ key, cls }) => {
+          const td = document.createElement("td");
+          td.className = cls;
+          td.textContent = row[key] || "-";
+          tr.append(td);
+        });
+        tbody.append(tr);
+      });
+    }
+
+    function renderContestCards(rows) {
+      els.contestCards.innerHTML = "";
+      if (!rows.length) {
+        els.contestCards.innerHTML = '<div class="rounded-md bg-slate-50 px-4 py-3 text-sm text-slate-500">コンクール実績は未設定です。</div>';
+        return;
+      }
+      rows.forEach((row) => {
+        const card = document.createElement("article");
+        card.className = "rounded-md border border-pink-100 bg-white px-4 py-3 text-sm";
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-medium text-roseDeep">入賞年</p>
+              <p class="mt-1 font-semibold text-slate-900">${escapeHTML(row.year || "-")}</p>
+            </div>
+            <div class="shrink-0 rounded-full bg-roseSoft px-3 py-1 text-xs font-semibold text-roseDeep">${escapeHTML(row.count || "-")}</div>
           </div>
-        </a>`;
+          <div class="mt-3">
+            <p class="text-xs font-medium text-slate-500">コンクール名</p>
+            <p class="mt-1 leading-6 text-slate-700">${escapeHTML(row.name || "-")}</p>
+          </div>`;
+        els.contestCards.append(card);
+      });
     }
 
-    function renderSchools() {
-      const results = filteredSchools();
-      $("schoolList").innerHTML = results.map(cardHTML).join("");
-      $("resultCount").textContent = `${results.length}件の教室が見つかりました`;
-      $("emptyState").classList.toggle("hidden", results.length !== 0);
+    function renderStudy(items) {
+      els.studyList.innerHTML = "";
+      if (!items.length) {
+        els.studyList.innerHTML = '<li class="rounded-md bg-slate-50 px-4 py-3 text-slate-500">留学実績は未設定です。</li>';
+        return;
+      }
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "flex flex-col gap-1 rounded-md border border-pink-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between";
+        li.innerHTML = `<span class="font-medium text-slate-800">${escapeHTML(item.country)}</span><span class="text-slate-600">${escapeHTML(item.school)}</span>`;
+        els.studyList.append(li);
+      });
     }
 
-    $("filterKeyword").addEventListener("input", renderSchools);
-    Object.values(filters).forEach((select) => select.addEventListener("change", renderSchools));
+    function openModal(id) {
+      const s = schools.find((x) => x.id === id);
+      if (!s) return;
+      currentSchool = s;
+      els.modalImage.src = s.image || FALLBACK_IMAGE;
+      els.modalImage.alt = s.name;
+      els.modalName.textContent = s.name;
+      els.modalMeta.textContent = `${s.area || "地域未設定"} / ${s.method || "メソッド未設定"} / 最寄り駅: ${s.station || "未設定"} / 対象: ${s.ages.join("・") || "未設定"}`;
+      const localKey = `click_count_${s.id}`;
+      els.modalClickCount.textContent = localStorage.getItem(localKey) || 0;
+      els.modalDescription.textContent = s.description || "";
+      els.modalAddress.textContent = s.address || "未設定";
+      els.modalNearestStation.textContent = s.station || "未設定";
+      els.notice.textContent = "";
+      els.modalBadges.innerHTML = `${s.premium ? badge("おすすめ", "bg-roseMain text-white") : ""}${badge(`留学実績 ${s.studyRows.length}件`, "bg-roseSoft text-roseDeep")}${badge(`コンクール実績 ${s.contestRows.length}件`, "bg-roseSoft text-roseDeep")}`;
+      if (s.classImage) {
+        els.classImage.src = s.classImage;
+        els.classImage.classList.remove("hidden");
+        els.classImageFallback.classList.add("hidden");
+      } else {
+        els.classImage.src = "";
+        els.classImage.classList.add("hidden");
+        els.classImageFallback.classList.remove("hidden");
+      }
+      renderStudy(s.studyRows);
+      renderTable(els.contestTable, s.contestRows, [
+        { key: "year", cls: "px-4 py-3 font-medium text-slate-800" },
+        { key: "count", cls: "px-4 py-3 text-slate-600" },
+        { key: "name", cls: "px-4 py-3 text-slate-600" }
+      ], "コンクール実績は未設定です。");
+      renderContestCards(s.contestRows);
+      els.official.disabled = false;
+      els.official.textContent = "公式サイトを見る";
+      els.modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeModal() {
+      els.modal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      currentSchool = null;
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.remove("hidden");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => els.toast.classList.add("hidden"), 3200);
+    }
+
+    function handleOfficialClick() {
+      if (!currentSchool) return;
+      const now = Date.now();
+      const key = `affiliate_click_${currentSchool.id}`;
+      const duplicated = now - Number(localStorage.getItem(key) || 0) < 3600000;
+      els.official.disabled = true;
+      els.official.textContent = "確認中...";
+      const localKey = `click_count_${currentSchool.id}`;
+      if (duplicated) {
+        const msg = "重複クリックを検知したためカウントをスキップしました。";
+        els.notice.textContent = msg;
+        showToast(msg);
+      } else {
+        localStorage.setItem(key, String(now));
+        const newCount = Number(localStorage.getItem(localKey) || 0) + 1;
+        localStorage.setItem(localKey, String(newCount));
+        els.modalClickCount.textContent = newCount;
+        els.notice.textContent = "公式サイトへ移動します。";
+        showToast("公式サイトへ移動します。");
+        if (GAS_URL) {
+          fetch(GAS_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: currentSchool.id, name: currentSchool.name, timestamp: new Date().toLocaleString("ja-JP") })
+          }).catch(console.error);
+        }
+      }
+      if (currentSchool.affiliateUrl) window.open(currentSchool.affiliateUrl, "_blank", "noopener,noreferrer");
+      setTimeout(() => {
+        els.official.disabled = false;
+        els.official.textContent = "公式サイトを見る";
+      }, 3000);
+    }
+
+    function useSampleData() {
+      schools = SAMPLE_SCHOOLS;
+      buildFilters();
+      renderSchools();
+      showToast("プレビュー用サンプルデータを表示しています。");
+    }
+
+    function toggleAdvancedFilters() {
+      const open = els.advancedPanel.classList.toggle("hidden") === false;
+      els.advancedButton.querySelector("span").textContent = open ? "詳細検索条件を閉じる" : "詳細検索条件を表示する";
+      els.advancedIcon.textContent = open ? "-" : "+";
+      els.advancedButton.setAttribute("aria-expanded", String(open));
+    }
+
+    async function loadSchools() {
+      els.count.textContent = "教室データを読み込んでいます...";
+      els.list.innerHTML = "";
+      els.empty.classList.add("hidden");
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error("CSVを取得できませんでした。");
+        const loaded = rowsToSchools(parseCSV(await response.text()));
+        if (!loaded.length) throw new Error("CSVに表示可能な教室データがありません。");
+        schools = loaded;
+        buildFilters();
+        renderSchools();
+      } catch (error) {
+        console.warn(error);
+        useSampleData();
+      }
+    }
+
+    els.advancedButton.setAttribute("aria-expanded", "false");
+    els.advancedButton.addEventListener("click", toggleAdvancedFilters);
+    els.keyword.addEventListener("input", renderSchools);
+    els.nearestStation.addEventListener("input", renderSchools);
+    Object.values(filters).forEach((control) => {
+      control.addEventListener(control.tagName === "INPUT" ? "input" : "change", renderSchools);
+    });
     $("resetButton").addEventListener("click", () => {
-      $("filterKeyword").value = "";
-      Object.values(filters).forEach((select) => select.value = "");
+      els.keyword.value = "";
+      els.nearestStation.value = "";
+      Object.values(filters).forEach((select) => {
+        select.value = "";
+      });
       renderSchools();
     });
-
-    buildFilters();
-    renderSchools();
+    els.closeModal.addEventListener("click", closeModal);
+    els.backdrop.addEventListener("click", closeModal);
+    els.official.addEventListener("click", handleOfficialClick);
+    document.addEventListener("keydown", (event) => event.key === "Escape" && !els.modal.classList.contains("hidden") && closeModal());
+    loadSchools();
   </script>
 </body>
 </html>
