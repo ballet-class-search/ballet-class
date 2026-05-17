@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 公開後、https://example.com/ を実際のサイトURLに置き換えてください。 -->
   <url>
-    <loc>https://ballet-class-search.github.io/ballet-class/</loc>
-    <priority>1.0</priority>
+    <loc>https://example.com/index.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_1.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_2.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_3.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_4.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_5.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_6.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_7.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_8.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_9.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_10.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_11.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_12.html</loc>
+  </url>
+  <url>
+    <loc>https://example.com/school_13.html</loc>
   </url>
 </urlset>
