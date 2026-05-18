@@ -312,6 +312,34 @@ function showToast(message) {
   showToast.timer = setTimeout(() => els.toast.classList.add("hidden"), 3200);
 }
 
+function sendClickLog(school) {
+  if (!GAS_URL || !school) return false;
+
+  const payload = {
+    id: school.id,
+    name: school.name,
+    url: school.affiliateUrl || "",
+    timestamp: new Date().toLocaleString("ja-JP"),
+    pageUrl: location.href,
+    userAgent: navigator.userAgent
+  };
+  const body = JSON.stringify(payload);
+
+  if (navigator.sendBeacon) {
+    const blob = new Blob([body], { type: "text/plain;charset=UTF-8" });
+    if (navigator.sendBeacon(GAS_URL, blob)) return true;
+  }
+
+  fetch(GAS_URL, {
+    method: "POST",
+    mode: "no-cors",
+    keepalive: true,
+    headers: { "Content-Type": "text/plain;charset=UTF-8" },
+    body
+  }).catch(console.error);
+  return true;
+}
+
 function handleOfficialClick() {
   if (!currentSchool) return;
 
@@ -331,15 +359,7 @@ function handleOfficialClick() {
     els.modalClickCount.textContent = clickCounts[currentSchool.id];
     els.notice.textContent = "公式サイトへ移動します。";
     showToast("公式サイトへ移動します。");
-
-    if (GAS_URL) {
-      fetch(GAS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: currentSchool.id, name: currentSchool.name, timestamp: new Date().toLocaleString("ja-JP") })
-      }).catch(console.error);
-    }
+    sendClickLog(currentSchool);
   }
 
   if (currentSchool.affiliateUrl) window.open(currentSchool.affiliateUrl, "_blank", "noopener,noreferrer");
