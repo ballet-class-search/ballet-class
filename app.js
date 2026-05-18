@@ -350,25 +350,36 @@ function handleOfficialClick() {
 }
 
 async function loadSchools() {
-  els.count.textContent = "教室データを読み込んでいます...";
-  els.empty.classList.add("hidden");
+  schools = window.FALLBACK_SCHOOLS || [];
+  if (schools.length) {
+    buildFilters();
+    renderSchools();
+  } else {
+    els.count.textContent = "教室データを読み込んでいます...";
+    els.empty.classList.add("hidden");
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 3500);
 
   try {
     const response = await fetch(CSV_URL, { signal: controller.signal });
     if (!response.ok) throw new Error("CSVを取得できませんでした。");
-    schools = rowsToSchools(parseCSV(await response.text()));
-    if (!schools.length) throw new Error("CSVに教室データがありません。");
+    const csvSchools = rowsToSchools(parseCSV(await response.text()));
+    if (!csvSchools.length) throw new Error("CSVに教室データがありません。");
+    schools = csvSchools;
+    buildFilters();
+    renderSchools();
   } catch (error) {
-    schools = window.FALLBACK_SCHOOLS || [];
-    console.warn("CSV取得に失敗したため、保険データで表示します。", error);
+    if (!schools.length) {
+      schools = window.FALLBACK_SCHOOLS || [];
+      buildFilters();
+      renderSchools();
+    }
+    console.warn("CSV取得に失敗したため、表示済みの保険データを維持します。", error);
   } finally {
     clearTimeout(timeout);
   }
-
-  buildFilters();
-  renderSchools();
 }
 
 els.keyword.addEventListener("input", renderSchools);
