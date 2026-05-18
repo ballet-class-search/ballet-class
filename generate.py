@@ -1,0 +1,691 @@
+import argparse
+import csv
+import html
+import re
+import sys
+from pathlib import Path
+from urllib.request import urlopen
+
+CSV_URL = "https://docs.google.com/spreadsheets/d/1S1lFSofHdBF9zh1PkgJBFnoIjrKp3KWsw218mdYqsTQ/export?format=csv"
+OUTPUT_PATH = "index.html"
+MAX_GROUP_COUNT = 20
+
+BASE_TEMPLATE = """<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ballet Classe | バレエ教室検索</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roseSoft: "#fff1f5",
+            roseLine: "#f9c7d6",
+            roseMain: "#e85d8f",
+            roseDeep: "#be2f67"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-white text-slate-800">
+  <header class="border-b border-pink-100 bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-medium text-roseDeep">Ballet Classe</p>
+          <h1 class="mt-1 text-3xl font-semibold text-slate-900 sm:text-4xl">バレエ教室検索</h1>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+            地域、メソッド、対象年齢、留学実績、コンクール実績から、目的に合うバレエ教室を探せます。
+          </p>
+        </div>
+        <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">
+          プレミアム掲載の教室を優先表示
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <section class="border-b border-pink-100 pb-6">
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
+        <label class="block xl:col-span-2">
+          <span class="text-sm font-medium text-slate-700">キーワード検索</span>
+          <input id="filterKeyword" type="text" placeholder="教室名、特徴、住所など" class="mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100" />
+        </label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">地域</span><select id="filterArea" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">メソッド</span><select id="filterMethod" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">対象年齢</span><select id="filterAge" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">留学国</span><select id="filterStudyCountry" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">留学先学校名</span><select id="filterStudySchool" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">入賞年</span><select id="filterContestYear" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700">コンクール名</span><select id="filterContestName" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+      </div>
+      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p id="resultCount" class="text-sm text-slate-600"></p>
+        <button id="resetButton" class="inline-flex items-center justify-center rounded-md border border-pink-200 bg-white px-4 py-2 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">条件をリセット</button>
+      </div>
+    </section>
+    <section class="py-6">
+      <div id="schoolList" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+__STATIC_SEO_TEXT__
+      </div>
+      <div id="emptyState" class="hidden rounded-md border border-pink-100 bg-roseSoft px-6 py-12 text-center">
+        <p id="emptyTitle" class="text-base font-medium text-slate-800">条件に合う教室が見つかりませんでした。</p>
+        <p id="emptyText" class="mt-2 text-sm text-slate-600">絞り込み条件を変更して再検索してください。</p>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="fixed left-1/2 top-5 z-50 hidden w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-md border border-pink-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-lg"></div>
+  <div id="modal" class="fixed inset-0 z-40 hidden">
+    <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/45"></div>
+    <div class="relative flex min-h-full items-center justify-center p-4">
+      <article class="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg bg-white shadow-2xl">
+        <div class="relative">
+          <img id="modalImage" src="" alt="" class="h-64 w-full rounded-t-lg object-cover sm:h-80" />
+          <button id="closeModal" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl leading-none text-slate-700 shadow transition hover:bg-roseSoft" aria-label="閉じる">×</button>
+        </div>
+        <div class="p-5 sm:p-7">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div id="modalBadges" class="mb-3 flex flex-wrap gap-2"></div>
+              <h2 id="modalName" class="text-2xl font-semibold text-slate-900"></h2>
+              <p id="modalMeta" class="mt-2 text-sm text-slate-600"></p>
+            </div>
+            <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">
+              クリック数: <span id="modalClickCount" class="font-semibold">0</span>
+            </div>
+          </div>
+          <div class="mt-6 grid gap-5">
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">基本情報</h3>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div>
+                  <dt class="font-medium text-slate-700">最寄り駅</dt>
+                  <dd id="modalNearestStation" class="mt-1 text-slate-600"></dd>
+                </div>
+                <div>
+                  <dt class="font-medium text-slate-700">住所</dt>
+                  <dd id="modalAddress" class="mt-1 text-slate-600"></dd>
+                </div>
+              </dl>
+            </section>
+            <p id="modalDescription" class="leading-7 text-slate-700"></p>
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">留学実績</h3>
+              <ul id="modalStudyList" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
+            </section>
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">コンクール実績</h3>
+              <div class="mt-4 overflow-x-auto rounded-md border border-pink-100">
+                <table class="w-full min-w-[520px] border-collapse text-left text-sm">
+                  <thead class="bg-roseSoft text-roseDeep">
+                    <tr>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">入賞年</th>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">件数</th>
+                      <th class="border-b border-pink-100 px-4 py-3 font-semibold">コンクール名</th>
+                    </tr>
+                  </thead>
+                  <tbody id="modalContestTable" class="divide-y divide-pink-100 bg-white"></tbody>
+                </table>
+              </div>
+            </section>
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">クラス・料金</h3>
+              <div class="mt-4">
+                <img id="modalClassImage" src="" alt="クラス・料金スケジュール" class="hidden h-auto w-full rounded-md object-contain" />
+                <p id="modalClassImageFallback" class="hidden text-sm text-slate-500">クラス情報は未設定です。</p>
+              </div>
+            </section>
+          </div>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p id="modalNotice" class="min-h-6 text-sm text-slate-600"></p>
+            <button id="officialButton" class="inline-flex items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200">公式サイトを見る</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+  <script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/1S1lFSofHdBF9zh1PkgJBFnoIjrKp3KWsw218mdYqsTQ/export?format=csv";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyxeiO-Agv70G28dxpNFO5JvEwPhs0506Csq8SWHTuXKxJr1PixEI8_I5PcI7xtr8sy/exec";
+    const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=1400&q=80";
+    const MAX_GROUP_COUNT = 20;
+    const $ = (id) => document.getElementById(id);
+    const clickCounts = {};
+    let schools = [];
+    let currentSchool = null;
+
+    const els = {
+      keyword: $("filterKeyword"),
+      list: $("schoolList"),
+      count: $("resultCount"),
+      empty: $("emptyState"),
+      emptyTitle: $("emptyTitle"),
+      emptyText: $("emptyText"),
+      toast: $("toast"),
+      modal: $("modal"),
+      modalImage: $("modalImage"),
+      modalBadges: $("modalBadges"),
+      modalName: $("modalName"),
+      modalMeta: $("modalMeta"),
+      modalClickCount: $("modalClickCount"),
+      modalDescription: $("modalDescription"),
+      modalNearestStation: $("modalNearestStation"),
+      modalAddress: $("modalAddress"),
+      classImage: $("modalClassImage"),
+      classImageFallback: $("modalClassImageFallback"),
+      studyList: $("modalStudyList"),
+      contestTable: $("modalContestTable"),
+      notice: $("modalNotice"),
+      official: $("officialButton")
+    };
+
+    const filters = {
+      area: $("filterArea"),
+      method: $("filterMethod"),
+      age: $("filterAge"),
+      studyCountry: $("filterStudyCountry"),
+      studySchool: $("filterStudySchool"),
+      contestYear: $("filterContestYear"),
+      contestName: $("filterContestName")
+    };
+
+    const filterSources = {
+      area: (s) => [s.area],
+      method: (s) => [s.method],
+      age: (s) => s.ages,
+      studyCountry: (s) => s.studyRows.map((x) => x.country),
+      studySchool: (s) => s.studyRows.map((x) => x.school),
+      contestYear: (s) => s.contestRows.map((x) => x.year),
+      contestName: (s) => s.contestRows.map((x) => x.name)
+    };
+
+    const normalizeKey = (v) => String(v || "")
+      .trim()
+      .replace(/[手登-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+      .replace(/　/g, " ")
+      .replace(/\\s+/g, "");
+
+    const escapeHTML = (v) => String(v ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+    const uniq = (values) => [...new Set(values.filter((v) => String(v || "").trim() && v !== "-"))]
+      .sort((a, b) => String(a).localeCompare(String(b), "ja"));
+
+    const badge = (text, cls) =>
+      `<span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${cls}">${escapeHTML(text)}</span>`;
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const n = text[i + 1];
+        if (c === '"' && quoted && n === '"') {
+          value += '"';
+          i++;
+        } else if (c === '"') {
+          quoted = !quoted;
+        } else if (c === "," && !quoted) {
+          row.push(value.trim());
+          value = "";
+        } else if ((c === "\\n" || c === "\\r") && !quoted) {
+          if (c === "\\r" && n === "\\n") i++;
+          row.push(value.trim());
+          if (row.some(Boolean)) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += c;
+        }
+      }
+      row.push(value.trim());
+      if (row.some(Boolean)) rows.push(row);
+      return rows;
+    }
+
+    function getField(row, keys) {
+      for (const key of keys) {
+        const value = row[normalizeKey(key)];
+        if (value !== undefined && String(value).trim()) return String(value).trim();
+      }
+      return "";
+    }
+
+    function collectRows(row, config) {
+      const rows = [];
+      for (let i = 1; i <= MAX_GROUP_COUNT; i++) {
+        const item = Object.fromEntries(
+          Object.entries(config.fields).map(([prop, names]) => [prop, getField(row, names(i))])
+        );
+        if (Object.values(item).some(Boolean) && !(config.skip && config.skip(item))) {
+          rows.push(config.map(item));
+        }
+      }
+      return rows.length ? rows : config.fallback || [];
+    }
+
+    function rowsToSchools(csvRows) {
+      if (csvRows.length < 2) return [];
+      const headers = csvRows[0].map(normalizeKey);
+      return csvRows.slice(1).map((cells, index) => {
+        const row = Object.fromEntries(headers.map((h, i) => [h, cells[i] || ""]));
+        const name = getField(row, ["教室名", "名前", "name", "schoolName"]);
+        return {
+          id: getField(row, ["ID", "id"]) || `${name || "school"}-${index + 1}`,
+          name,
+          area: getField(row, ["地域", "area", "prefecture"]),
+          method: getField(row, ["メソッド", "method"]),
+          nearestStation: getField(row, ["最寄り駅", "最寄駅", "最寄駅名", "駅", "nearestStation", "station"]),
+          ages: getField(row, ["対象年齢", "年齢", "ages", "age"]).split(/\\s+/).filter(Boolean),
+          premium: ["true", "1", "yes", "あり", "有料", "プレミアム", "premium", "おすすめ"].includes(
+            getField(row, ["プレミアム", "おすすめ", "premium", "plan"]).toLowerCase()
+          ),
+          image: getField(row, ["画像URL", "画像", "image", "imageUrl", "image_url"]),
+          description: getField(row, ["説明文", "説明", "description"]),
+          address: getField(row, ["住所", "address"]),
+          affiliateUrl: getField(row, ["公式サイトURL", "公式サイト", "affiliateUrl", "officialUrl", "url"]),
+          classImage: getField(row, ["クラス画像URL", "料金表画像URL", "スケジュール画像URL", "スケジュール画像", "classImageUrl", "classImage"]),
+          studyRows: collectRows(row, {
+            fields: {
+              country: (i) => [`留学\${i}国名`, `留学\${i}国`, `留学国\${i}`, `study\${i}Country`],
+              school: (i) => [`留学\${i}学校名`, `留学\${i}学校`, `留学先\${i}学校名`, `留学先学校名\${i}`, `study\${i}School`]
+            },
+            skip: (x) => x.country === "なし" || x.school === "なし",
+            map: (x) => ({ country: x.country || "-", school: x.school || "-" })
+          }),
+          contestRows: collectRows(row, {
+            fields: {
+              year: (i) => [`コンクール\${i}入賞年`, `コンクール\${i}年`, `入賞年\${i}`, `contest\${i}Year`],
+              count: (i) => [`コンクール\${i}件数`, `入賞\${i}件数`, `件数\${i}`, `contest\${i}Count`],
+              name: (i) => [`コンクール\${i}名`, `コンクール名\${i}`, `contest\${i}Name`]
+            },
+            skip: (x) => x.name === "なし",
+            map: (x) => ({ year: x.year || "-", count: x.count || "-", name: x.name || "-" })
+          })
+        };
+      }).filter((s) => s.name);
+    }
+
+    function setOptions(select, values) {
+      const current = select.value;
+      select.innerHTML = '<option value="">すべて</option>';
+      uniq(values).forEach((value) => select.append(new Option(value, value)));
+      if ([...select.options].some((o) => o.value === current)) select.value = current;
+    }
+
+    function buildFilters() {
+      Object.entries(filters).forEach(([key, select]) => {
+        setOptions(select, schools.flatMap(filterSources[key]));
+      });
+    }
+
+    function filteredSchools() {
+      const keyword = els.keyword.value.trim().toLowerCase();
+      return schools
+        .filter((s) => !keyword || [
+          s.name,
+          s.description,
+          s.address,
+          s.nearestStation,
+          s.area,
+          s.method,
+          s.ages.join(" "),
+          s.studyRows.map((x) => `${x.country} ${x.school}`).join(" "),
+          s.contestRows.map((x) => `${x.year} ${x.count} ${x.name}`).join(" ")
+        ].join(" ").toLowerCase().includes(keyword))
+        .filter((s) => Object.entries(filters).every(([key, select]) => {
+          return !select.value || filterSources[key](s).includes(select.value);
+        }))
+        .sort((a, b) => Number(b.premium) - Number(a.premium));
+    }
+
+    function removeInitialSeoText() {
+      const initialSeoText = $("initialSeoText");
+      if (initialSeoText) initialSeoText.remove();
+    }
+
+    function renderSchools() {
+      removeInitialSeoText();
+      const results = filteredSchools();
+      els.list.innerHTML = "";
+      els.count.textContent = `${results.length}件の教室が見つかりました`;
+      els.emptyTitle.textContent = "条件に合う教室が見つかりませんでした。";
+      els.emptyText.textContent = "絞り込み条件を変更して再検索してください。";
+      els.empty.classList.toggle("hidden", results.length !== 0);
+      results.forEach((s) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md";
+        card.onclick = () => openModal(s.id);
+        card.innerHTML = `
+          <div class="relative">
+            <img src="${escapeHTML(s.image || FALLBACK_IMAGE)}" alt="${escapeHTML(s.name)}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
+            \${s.premium ? `<div class="absolute left-3 top-3">\${badge("おすすめ", "bg-roseMain text-white shadow")}</div>` : ""}
+          </div>
+          <div class="p-4">
+            <div class="flex flex-wrap gap-2">
+              \${badge(s.area || "地域未設定", "bg-roseSoft text-roseDeep")}
+              \${badge(s.method || "メソッド未設定", "bg-white text-slate-700 border border-pink-100")}
+            </div>
+            <h2 class="mt-3 text-lg font-semibold text-slate-900">\${escapeHTML(s.name)}</h2>
+            <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">\${escapeHTML(s.description || "")}</p>
+            <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="rounded-md bg-slate-50 px-2 py-1">対象: \${escapeHTML(s.ages.join(" / ") || "未設定")}</span>
+              \${s.nearestStation ? `<span class="rounded-md bg-slate-50 px-2 py-1">最寄り駅: \${escapeHTML(s.nearestStation)}</span>` : ""}
+              <span class="rounded-md bg-slate-50 px-2 py-1">留学実績: \${s.studyRows.length}件</span>
+              <span class="rounded-md bg-slate-50 px-2 py-1">コンクール: \${s.contestRows.length}件</span>
+            </div>
+          </div>`;
+        els.list.append(card);
+      });
+    }
+
+    function renderTable(tbody, rows, cells, emptyText) {
+      tbody.innerHTML = "";
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="\${cells.length}" class="px-4 py-3 text-center text-slate-500">\${emptyText}</td></tr>`;
+        return;
+      }
+      rows.forEach((row, i) => {
+        const tr = document.createElement("tr");
+        tr.className = i % 2 ? "bg-roseSoft/40" : "bg-white";
+        cells.forEach(({ key, cls }) => {
+          const td = document.createElement("td");
+          td.className = cls;
+          td.textContent = row[key] || "-";
+          tr.append(td);
+        });
+        tbody.append(tr);
+      });
+    }
+
+    function renderStudy(items) {
+      els.studyList.innerHTML = "";
+      if (!items.length) {
+        els.studyList.innerHTML = '<li class="rounded-md bg-slate-50 px-4 py-3 text-slate-500">留学実績は未設定です。</li>';
+        return;
+      }
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "flex flex-col gap-1 rounded-md border border-pink-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between";
+        li.innerHTML = `<span class="font-medium text-slate-800">\${escapeHTML(item.country)}</span><span class="text-slate-600">\${escapeHTML(item.school)}</span>`;
+        els.studyList.append(li);
+      });
+    }
+
+    function openModal(id) {
+      const s = schools.find((x) => x.id === id);
+      if (!s) return;
+      currentSchool = s;
+      els.modalImage.src = s.image || FALLBACK_IMAGE;
+      els.modalImage.alt = s.name;
+      els.modalName.textContent = s.name;
+      els.modalMeta.textContent = `\${s.area || "地域未設定"} / \${s.method || "メソッド未設定"} / 対象: \${s.ages.join("・") || "未設定"}`;
+      els.modalClickCount.textContent = clickCounts[s.id] || 0;
+      els.modalDescription.textContent = s.description || "";
+      els.modalNearestStation.textContent = s.nearestStation || "未設定";
+      els.modalAddress.textContent = s.address || "未設定";
+      els.notice.textContent = "";
+      els.modalBadges.innerHTML = `
+        \${s.premium ? badge("おすすめ", "bg-roseMain text-white") : ""}
+        \${badge(`留学実績 \${s.studyRows.length}件`, "bg-roseSoft text-roseDeep")}
+        \${badge(`コンクール実績 \${s.contestRows.length}件`, "bg-roseSoft text-roseDeep")}
+      `;
+      if (s.classImage) {
+        els.classImage.src = s.classImage;
+        els.classImage.classList.remove("hidden");
+        els.classImageFallback.classList.add("hidden");
+      } else {
+        els.classImage.src = "";
+        els.classImage.classList.add("hidden");
+        els.classImageFallback.classList.remove("hidden");
+      }
+      renderStudy(s.studyRows);
+      renderTable(els.contestTable, s.contestRows, [
+        { key: "year", cls: "px-4 py-3 font-medium text-slate-800" },
+        { key: "count", cls: "px-4 py-3 text-slate-600" },
+        { key: "name", cls: "px-4 py-3 text-slate-600" }
+      ], "コンクール実績は未設定です。");
+      els.official.disabled = false;
+      els.official.textContent = "公式サイトを見る";
+      els.modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeModal() {
+      els.modal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      currentSchool = null;
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.remove("hidden");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => els.toast.classList.add("hidden"), 3200);
+    }
+
+    function handleOfficialClick() {
+      if (!currentSchool) return;
+      const now = Date.now();
+      const key = `affiliate_click_\${currentSchool.id}`;
+      const duplicated = now - Number(localStorage.getItem(key) || 0) < 60 * 60 * 1000;
+      els.official.disabled = true;
+      els.official.textContent = "確認中...";
+      if (duplicated) {
+        const msg = "重複クリックを検知したためカウントをスキップしました。";
+        els.notice.textContent = msg;
+        showToast(msg);
+        if (currentSchool.affiliateUrl) window.open(currentSchool.affiliateUrl, "_blank", "noopener,noreferrer");
+      } else {
+        localStorage.setItem(key, String(now));
+        clickCounts[currentSchool.id] = (clickCounts[currentSchool.id] || 0) + 1;
+        els.modalClickCount.textContent = clickCounts[currentSchool.id];
+        els.notice.textContent = "公式サイトへ移動します。";
+        showToast("公式サイトへ移動します。");
+        if (GAS_URL) {
+          fetch(GAS_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: currentSchool.id,
+              name: currentSchool.name,
+              timestamp: new Date().toLocaleString("ja-JP")
+            })
+          }).catch(console.error);
+        }
+        if (currentSchool.affiliateUrl) window.open(currentSchool.affiliateUrl, "_blank", "noopener,noreferrer");
+      }
+      setTimeout(() => {
+        els.official.disabled = false;
+        els.official.textContent = "公式サイトを見る";
+      }, 3000);
+    }
+
+    async function loadSchools() {
+      els.count.textContent = "教室データを読み込んでいます...";
+      els.empty.classList.add("hidden");
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error("CSVを取得できませんでした。");
+        schools = rowsToSchools(parseCSV(await response.text()));
+        buildFilters();
+        renderSchools();
+      } catch (error) {
+        els.count.textContent = "教室データの読み込みに失敗しました。CSV URLを確認してください。";
+        els.emptyTitle.textContent = "教室データを読み込めませんでした。";
+        els.emptyText.textContent = "CSV_URL を公開CSVのURLに差し替えてください。";
+        els.empty.classList.remove("hidden");
+        console.error(error);
+      }
+    }
+
+    els.keyword.addEventListener("input", renderSchools);
+    Object.values(filters).forEach((select) => select.addEventListener("change", renderSchools));
+
+    $("resetButton").addEventListener("click", () => {
+      els.keyword.value = "";
+      Object.values(filters).forEach((select) => select.value = "");
+      renderSchools();
+    });
+
+    $("closeModal").addEventListener("click", closeModal);
+    $("modalBackdrop").addEventListener("click", closeModal);
+    els.official.addEventListener("click", handleOfficialClick);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !els.modal.classList.contains("hidden")) closeModal();
+    });
+
+    loadSchools();
+  </script>
+</body>
+</html>
+"""
+
+def normalize_key(value: str) -> str:
+    table = str.maketrans("０１２３４５６７８９", "0123456789")
+    text = str(value or "").strip().translate(table).replace("　", " ")
+    return re.sub(r"\s+", "", text)
+
+def get_field(row: dict, keys: list[str]) -> str:
+    for key in keys:
+        value = row.get(normalize_key(key), "")
+        if str(value).strip():
+            return str(value).strip()
+    return ""
+
+def collect_rows(row: dict, fields: dict, skip=None) -> list[dict]:
+    rows = []
+    for i in range(1, MAX_GROUP_COUNT + 1):
+        item = {
+            prop: get_field(row, names(i))
+            for prop, names in fields.items()
+        }
+        if any(item.values()) and not (skip and skip(item)):
+            rows.append(item)
+    return rows
+
+def read_csv_text(local_csv: str | None) -> str:
+    if local_csv:
+        return Path(local_csv).read_text(encoding="utf-8-sig")
+    with urlopen(CSV_URL, timeout=30) as response:
+        return response.read().decode("utf-8-sig")
+
+def parse_schools(csv_text: str) -> list[dict]:
+    rows = list(csv.reader(csv_text.splitlines()))
+    if len(rows) < 2:
+        return []
+    headers = [normalize_key(value) for value in rows[0]]
+    schools = []
+    for index, cells in enumerate(rows[1:], start=1):
+        row = {
+            header: cells[i].strip() if i < len(cells) else ""
+            for i, header in enumerate(headers)
+        }
+        name = get_field(row, ["教室名", "名前", "name", "schoolName"])
+        if not name:
+            continue
+        ages = get_field(row, ["対象年齢", "年齢", "ages", "age"]).split()
+        study_rows = collect_rows(
+            row,
+            {
+                "country": lambda i: [f"留学{i}国名", f"留学{i}国", f"留学国{i}", f"study{i}Country"],
+                "school": lambda i: [f"留学{i}学校名", f"留学{i}学校", f"留学先{i}学校名", f"留学先学校名{i}", f"study{i}School"],
+            },
+            skip=lambda x: x.get("country") == "なし" or x.get("school") == "なし",
+        )
+        contest_rows = collect_rows(
+            row,
+            {
+                "year": lambda i: [f"コンクール{i}入賞年", f"コンクール{i}年", f"入賞年{i}", f"contest{i}Year"],
+                "count": lambda i: [f"コンクール{i}件数", f"入賞{i}件数", f"件数{i}", f"contest{i}Count"],
+                "name": lambda i: [f"コンクール{i}名", f"コンクール名{i}", f"contest{i}Name"],
+            },
+            skip=lambda x: x.get("name") == "なし",
+        )
+        schools.append({
+            "id": get_field(row, ["ID", "id"]) or f"school_{index}",
+            "name": name,
+            "area": get_field(row, ["地域", "area", "prefecture"]),
+            "method": get_field(row, ["メソッド", "method"]),
+            "nearest_station": get_field(row, ["最寄り駅", "最寄駅", "最寄駅名", "駅", "nearestStation", "station"]),
+            "address": get_field(row, ["住所", "address"]),
+            "description": get_field(row, ["説明文", "説明", "description"]),
+            "ages": ages,
+            "study_rows": study_rows,
+            "contest_rows": contest_rows,
+        })
+    return schools
+
+def e(value: str) -> str:
+    return html.escape(str(value or ""), quote=True)
+
+def build_static_seo_text(schools: list[dict]) -> str:
+    lines = [
+        '        <section id="initialSeoText" class="sr-only" aria-label="バレエ教室の静的テキスト一覧">',
+        "          <h2>バレエ教室一覧</h2>",
+    ]
+    for school in schools:
+        study_text = "、".join(
+            f"{item.get('country') or '-'} {item.get('school') or '-'}"
+            for item in school["study_rows"]
+        )
+        contest_text = "、".join(
+            f"{item.get('year') or '-'} {item.get('count') or '-'} {item.get('name') or '-'}"
+            for item in school["contest_rows"]
+        )
+        lines.extend([
+            '          <article>',
+            f"            <h3>{e(school['name'])}</h3>",
+            f"            <p>地域: {e(school['area'] or '未設定')}</p>",
+            f"            <p>メソッド: {e(school['method'] or '未設定')}</p>",
+            f"            <p>対象年齢: {e(' / '.join(school['ages']) or '未設定')}</p>",
+            f"            <p>最寄り駅: {e(school['nearest_station'] or '未設定')}</p>",
+            f"            <p>住所: {e(school['address'] or '未設定')}</p>",
+            f"            <p>説明: {e(school['description'])}</p>",
+            f"            <p>留学実績: {e(study_text or '未設定')}</p>",
+            f"            <p>コンクール実績: {e(contest_text or '未設定')}</p>",
+            "          </article>",
+        ])
+    lines.append("        </section>")
+    return "\n".join(lines)
+
+def build_index(local_csv: str | None, output: str) -> int:
+    csv_text = read_csv_text(local_csv)
+    schools = parse_schools(csv_text)
+    if not schools:
+        raise RuntimeError("CSVから教室データを取得できませんでした。列名や公開設定を確認してください。")
+    static_seo_text = build_static_seo_text(schools)
+    html_text = BASE_TEMPLATE.replace("__STATIC_SEO_TEXT__", static_seo_text)
+    Path(output).write_text(html_text, encoding="utf-8")
+    print(f"{output} を生成しました。静的テキスト埋め込み件数: {len(schools)}件")
+    return len(schools)
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="GoogleスプレッドシートCSVから、sr-onlyの静的SEOテキストを埋め込んだindex.htmlを生成します。"
+    )
+    parser.add_argument("--csv", help="ローカルCSVを使う場合のパス。未指定ならGoogleスプレッドシートから取得します。")
+    parser.add_argument("--output", default=OUTPUT_PATH, help="出力HTMLファイル名。既定値: index.html")
+    args = parser.parse_args()
+    try:
+        build_index(args.csv, args.output)
+    except Exception as error:
+        print(f"エラー: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
