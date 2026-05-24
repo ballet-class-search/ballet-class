@@ -3,7 +3,6 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyxeiO-Agv70G28dxpNFO5J
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=1400&q=80";
 const MAX_GROUP_COUNT = 20;
 const $ = (id) => document.getElementById(id);
-const clickCounts = {};
 let schools = [];
 let currentSchool = null;
 
@@ -20,7 +19,6 @@ const els = {
   modalBadges: $("modalBadges"),
   modalName: $("modalName"),
   modalMeta: $("modalMeta"),
-  modalClickCount: $("modalClickCount"),
   modalDescription: $("modalDescription"),
   modalNearestStation: $("modalNearestStation"),
   modalAddress: $("modalAddress"),
@@ -202,7 +200,7 @@ function renderSchools() {
   results.forEach((s) => {
     const card = document.createElement("button");
     card.type = "button";
-    card.className = "group overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md";
+    card.className = "group min-w-0 overflow-hidden rounded-lg border border-pink-100 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-roseLine hover:shadow-md";
     card.onclick = () => openModal(s.id);
     card.innerHTML = `
       <div class="relative">
@@ -214,7 +212,7 @@ function renderSchools() {
           ${badge(s.area || "地域未設定", "bg-roseSoft text-roseDeep")}
           ${badge(s.method || "メソッド未設定", "bg-white text-slate-700 border border-pink-100")}
         </div>
-        <h2 class="mt-3 text-lg font-semibold text-slate-900">${escapeHTML(s.name)}</h2>
+        <h2 class="mt-3 break-words text-lg font-semibold text-slate-900">${escapeHTML(s.name)}</h2>
         <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">${escapeHTML(s.description || "")}</p>
         <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
           <span class="rounded-md bg-slate-50 px-2 py-1">対象: ${escapeHTML(s.ages.join(" / ") || "未設定")}</span>
@@ -265,7 +263,6 @@ function openModal(id) {
   els.modalImage.alt = s.name;
   els.modalName.textContent = s.name;
   els.modalMeta.textContent = `${s.area || "地域未設定"} / ${s.method || "メソッド未設定"} / 対象: ${s.ages.join("・") || "未設定"}`;
-  els.modalClickCount.textContent = clickCounts[s.id] || 0;
   els.modalDescription.textContent = s.description || "";
   els.modalNearestStation.textContent = s.nearestStation || "未設定";
   els.modalAddress.textContent = s.address || "未設定";
@@ -288,9 +285,9 @@ function openModal(id) {
 
   renderStudy(s.studyRows);
   renderTable(els.contestTable, s.contestRows, [
-    { key: "year", cls: "px-4 py-3 font-medium text-slate-800" },
-    { key: "count", cls: "px-4 py-3 text-slate-600" },
-    { key: "name", cls: "px-4 py-3 text-slate-600" }
+    { key: "year", cls: "break-words px-2 py-2 font-medium text-slate-800 sm:px-3 sm:py-3" },
+    { key: "count", cls: "break-words px-2 py-2 text-slate-600 sm:px-3 sm:py-3" },
+    { key: "name", cls: "break-words px-2 py-2 text-slate-600 sm:px-3 sm:py-3" }
   ], "コンクール実績は未設定です。");
 
   els.official.disabled = false;
@@ -355,8 +352,6 @@ function handleOfficialClick() {
     showToast(msg);
   } else {
     localStorage.setItem(key, String(now));
-    clickCounts[currentSchool.id] = (clickCounts[currentSchool.id] || 0) + 1;
-    els.modalClickCount.textContent = clickCounts[currentSchool.id];
     els.notice.textContent = "公式サイトへ移動します。";
     showToast("公式サイトへ移動します。");
     sendClickLog(currentSchool);
