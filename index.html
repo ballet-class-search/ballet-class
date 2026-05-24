@@ -32,7 +32,7 @@
     };
   </script>
 </head>
-<body class="min-h-screen bg-white text-slate-800">
+<body class="min-h-screen overflow-x-hidden bg-white text-slate-800">
   <header class="border-b border-pink-100 bg-white">
     <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -59,9 +59,12 @@
         </label>
       </div>
 
-      <details class="mt-4 rounded-md border border-pink-100 bg-roseSoft/40">
-        <summary class="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-roseDeep">
-          詳細検索
+      <details class="group mt-4 rounded-md border border-pink-100 bg-roseSoft/40">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-roseDeep">
+          <span>詳細検索</span>
+          <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+          </svg>
         </summary>
         <div class="grid gap-4 border-t border-pink-100 bg-white p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
           <label class="block"><span class="text-sm font-medium text-slate-700">地域</span><select id="filterArea" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
@@ -81,7 +84,7 @@
     </section>
 
     <section class="py-6">
-      <div id="schoolList" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div id="schoolList" class="grid min-w-0 gap-5 md:grid-cols-2 xl:grid-cols-3">
         <section id="initialSeoText" class="sr-only" aria-label="バレエ教室の静的テキスト一覧">
           <h2>バレエ教室一覧</h2>
           <article><h3><a href="school_1.html">エトワールバレエの教室ページ</a></h3><p>東京、表参道駅、ワガノワ、キッズ・ジュニア・プロ・大人。東京都渋谷区神宮前1-2-3。初めてのお子様から大人まで丁寧に指導します。留学実績: ロシア ボリショイバレエ学校。コンクール実績: 2025 ローザンヌ国際バレエコンクール。</p></article>
@@ -112,21 +115,19 @@
   <div id="modal" class="fixed inset-0 z-40 hidden">
     <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/45"></div>
     <div class="relative flex min-h-full items-center justify-center p-4">
-      <article class="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg bg-white shadow-2xl">
+      <article class="max-h-[92vh] min-w-0 w-full max-w-[calc(100vw-2rem)] overflow-x-hidden overflow-y-auto rounded-lg bg-white shadow-2xl sm:max-w-5xl">
         <div class="relative">
           <img id="modalImage" src="" alt="" class="h-64 w-full rounded-t-lg object-cover sm:h-80" />
           <button id="closeModal" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl leading-none text-slate-700 shadow transition hover:bg-roseSoft" aria-label="閉じる">×</button>
         </div>
         <div class="p-5 sm:p-7">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
               <div id="modalBadges" class="mb-3 flex flex-wrap gap-2"></div>
-              <h2 id="modalName" class="text-2xl font-semibold text-slate-900"></h2>
+              <h2 id="modalName" class="break-words text-2xl font-semibold text-slate-900"></h2>
               <p id="modalMeta" class="mt-2 text-sm text-slate-600"></p>
             </div>
-            <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">
-              クリック数: <span id="modalClickCount" class="font-semibold">0</span>
-            </div>
+            <button id="officialButton" class="inline-flex w-full shrink-0 items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200 sm:w-auto">公式サイトを見る</button>
           </div>
           <div class="mt-6 grid gap-5">
             <section class="rounded-md border border-pink-100 p-4">
@@ -141,8 +142,8 @@
             <section class="rounded-md border border-pink-100 p-4">
               <h3 class="text-base font-semibold text-slate-900">コンクール実績</h3>
               <div class="mt-4 overflow-x-auto rounded-md border border-pink-100">
-                <table class="w-full min-w-[520px] border-collapse text-left text-sm">
-                  <thead class="bg-roseSoft text-roseDeep"><tr><th class="border-b border-pink-100 px-4 py-3 font-semibold">入賞年</th><th class="border-b border-pink-100 px-4 py-3 font-semibold">件数</th><th class="border-b border-pink-100 px-4 py-3 font-semibold">コンクール名</th></tr></thead>
+                <table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                  <thead class="bg-roseSoft text-roseDeep"><tr><th class="w-1/4 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">入賞年</th><th class="w-1/5 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">件数</th><th class="break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">コンクール名</th></tr></thead>
                   <tbody id="modalContestTable" class="divide-y divide-pink-100 bg-white"></tbody>
                 </table>
               </div>
@@ -151,7 +152,6 @@
           </div>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p id="modalNotice" class="min-h-6 text-sm text-slate-600"></p>
-            <button id="officialButton" class="inline-flex items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200">公式サイトを見る</button>
           </div>
         </div>
       </article>
@@ -159,6 +159,6 @@
   </div>
 
   <script src="schools-data.js?v=20260518-1"></script>
-  <script src="app.js?v=20260524-1"></script>
+  <script src="app.js?v=20260524-4"></script>
 </body>
 </html>
