@@ -38,8 +38,8 @@ def main() -> int:
     require(index, "Ballet Map|留学‣入賞実績からバレエ教室を検索", "index.html")
     require(index, 'meta name="description"', "index.html")
     require(index, 'rel="canonical" href="https://ballet-class-search.com/"', "index.html")
-    require(index, "schools-data.js?v=20260527-1", "index.html")
-    require(index, "app.js?v=20260527-1", "index.html")
+    require(index, "schools-data.js?v=20260527-2", "index.html")
+    require(index, "app.js?v=20260527-2", "index.html")
     require(index, 'id="filterGraduates"', "index.html")
     require(index, "卒業生実績", "index.html")
 
