@@ -12,6 +12,7 @@ window.FALLBACK_SCHOOLS = [
     address: "東京都渋谷区神宮前1-2-3",
     affiliateUrl: "https://example.com/etoile",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+A",
+    graduates: "ボリショイバレエ団 新国立バレエ団",
     studyRows: [{ country: "ロシア", school: "ボリショイバレエ学校" }],
     contestRows: [{ year: "2025", count: "1件", name: "ローザンヌ国際バレエコンクール" }, { year: "2025", count: "4件", name: "(その他)国内コンクール" }]
   },
@@ -28,6 +29,7 @@ window.FALLBACK_SCHOOLS = [
     address: "神奈川県横浜市中区元町4-5-6",
     affiliateUrl: "https://example.com/rose",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+B",
+    graduates: "劇団四季",
     studyRows: [{ country: "モナコ", school: "プリンセスグレースアカデミー" }],
     contestRows: [{ year: "2024", count: "2件", name: "(その他)国内コンクール" }]
   },
@@ -44,6 +46,7 @@ window.FALLBACK_SCHOOLS = [
     address: "千葉県船橋市本町7-8-9",
     affiliateUrl: "https://example.com/clara",
     classImage: "",
+    graduates: "新国立バレエ団",
     studyRows: [],
     contestRows: [{ year: "2025", count: "1件", name: "YAGP" }]
   },
@@ -60,6 +63,7 @@ window.FALLBACK_SCHOOLS = [
     address: "埼玉県さいたま市大宮区高鼻町1-2-3",
     affiliateUrl: "https://example.com/lumiere",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+E",
+    graduates: "宝塚歌劇団",
     studyRows: [{ country: "イギリス", school: "ロイヤルバレエ学校" }],
     contestRows: [{ year: "2025", count: "2件", name: "国内バレエコンクール" }, { year: "2024", count: "1件", name: "国際コンクール" }]
   },
@@ -76,6 +80,7 @@ window.FALLBACK_SCHOOLS = [
     address: "大阪府大阪市北区梅田2-3-4",
     affiliateUrl: "https://example.com/soleil",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+F",
+    graduates: "",
     studyRows: [{ country: "ロシア", school: "ワガノワバレエアカデミー" }],
     contestRows: [{ year: "2025", count: "3件", name: "YAGP" }, { year: "2024", count: "2件", name: "ローザンヌ国際バレエコンクール" }]
   },
@@ -92,6 +97,7 @@ window.FALLBACK_SCHOOLS = [
     address: "京都府京都市中京区烏丸通1-2",
     affiliateUrl: "https://example.com/mimosa",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+G",
+    graduates: "",
     studyRows: [],
     contestRows: [{ year: "2025", count: "1件", name: "国内コンクール" }]
   },
@@ -108,6 +114,7 @@ window.FALLBACK_SCHOOLS = [
     address: "兵庫県神戸市中央区三宮町3-4-5",
     affiliateUrl: "https://example.com/iris",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+H",
+    graduates: "",
     studyRows: [{ country: "フランス", school: "パリ・オペラ座バレエ学校" }],
     contestRows: [{ year: "2024", count: "1件", name: "国際バレエコンクール" }, { year: "2023", count: "2件", name: "国内コンクール" }]
   },
@@ -124,6 +131,7 @@ window.FALLBACK_SCHOOLS = [
     address: "愛知県名古屋市中村区名駅4-5-6",
     affiliateUrl: "https://example.com/eclat",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+I",
+    graduates: "",
     studyRows: [{ country: "アメリカ", school: "スクールオブアメリカンバレエ" }],
     contestRows: [{ year: "2025", count: "2件", name: "YAGP" }]
   },
@@ -140,6 +148,7 @@ window.FALLBACK_SCHOOLS = [
     address: "福岡県福岡市中央区天神2-3-4",
     affiliateUrl: "https://example.com/sylphide",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+J",
+    graduates: "",
     studyRows: [],
     contestRows: [{ year: "2025", count: "1件", name: "国内バレエコンクール" }]
   },
@@ -156,6 +165,7 @@ window.FALLBACK_SCHOOLS = [
     address: "北海道札幌市中央区北1条西2-3",
     affiliateUrl: "https://example.com/aurora",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+K",
+    graduates: "",
     studyRows: [{ country: "カナダ", school: "カナダ国立バレエ学校" }],
     contestRows: [{ year: "2024", count: "1件", name: "国内コンクール" }]
   },
@@ -172,6 +182,7 @@ window.FALLBACK_SCHOOLS = [
     address: "宮城県仙台市青葉区中央1-2-3",
     affiliateUrl: "https://example.com/stella",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+L",
+    graduates: "",
     studyRows: [],
     contestRows: []
   },
@@ -188,6 +199,7 @@ window.FALLBACK_SCHOOLS = [
     address: "広島県広島市中区紙屋町1-2-3",
     affiliateUrl: "https://example.com/flora",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+M",
+    graduates: "",
     studyRows: [{ country: "ドイツ", school: "ジョンクランコバレエ学校" }],
     contestRows: [{ year: "2025", count: "1件", name: "国内コンクール" }, { year: "2024", count: "1件", name: "YAGP" }]
   },
@@ -204,6 +216,7 @@ window.FALLBACK_SCHOOLS = [
     address: "静岡県静岡市葵区追手町1-2-3",
     affiliateUrl: "https://example.com/pirouette",
     classImage: "https://placehold.co/800x600/fff1f5/be2f67?text=Schedule+N",
+    graduates: "",
     studyRows: [{ country: "オーストラリア", school: "オーストラリアンバレエ学校" }],
     contestRows: [{ year: "2025", count: "2件", name: "ローザンヌ国際バレエコンクール" }, { year: "2024", count: "3件", name: "国内コンクール" }]
   }
