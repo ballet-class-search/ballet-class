@@ -63,13 +63,14 @@ python -m py_compile scripts/check_site_integrity.py generate_index_with_static_
 Manual browser checks:
 
 - 13 cards are shown.
-- `詳細検索` opens and shows `卒業生実績`.
+- `隧ｳ邏ｰ讀懃ｴ｢` opens and shows `蜊呈･ｭ逕溷ｮ溽ｸｾ`.
 - Graduate options split ballet company names from one spreadsheet cell.
 - Keyword search and reset work.
 - Detail modal opens.
 - Official site button is near the top.
 - No click count is visible.
 - No horizontal scroll appears on mobile width.
+- SEO tags are aligned: top page canonical is `https://ballet-class-search.com/`, every `school_*.html` page has a self canonical, no public HTML page contains `noindex`, `sitemap.xml` contains exactly the canonical URLs, and `robots.txt` points to the sitemap.
 
 ## Build
 
@@ -80,7 +81,8 @@ There is no build step. Public files are static:
 - `schools-data.js`
 - `school_*.html`
 - `favicon.png`
-- `sitemap.xml` if present in the publishing source
+- `sitemap.xml`
+- `robots.txt`
 
 When `app.js` or `schools-data.js` changes, update the cache query version in `index.html`, for example:
 
@@ -100,8 +102,18 @@ https://ballet-class-search.com/index.html?v=<current-version>
 The current known version is:
 
 ```text
-20260527-2
+20260529-1
 ```
+
+After publishing SEO changes, verify these URLs in Search Console URL Inspection:
+
+```text
+https://ballet-class-search.com/
+https://ballet-class-search.com/school_1.html
+https://ballet-class-search.com/sitemap.xml
+```
+
+Expected result: the user-declared canonical and Google-selected canonical should match. If Google still reports duplicate variants for `http`, `www`, `/index.html`, trailing slash, or query parameters, configure true 301 redirects at the DNS/CDN/hosting layer because GitHub Pages project files cannot emit server-side 301 responses for those variants.
 
 ## Common Errors
 
@@ -113,8 +125,8 @@ The current known version is:
   - Run `python scripts/check_site_integrity.py`.
   - Check `main/index.html` on GitHub.
   - Ensure no old generator or manual upload overwrote `index.html`.
-- Graduate dropdown has only `すべて`:
-  - Confirm the CSV has a `卒業生` or compatible column.
+- Graduate dropdown has only `縺吶∋縺ｦ`:
+  - Confirm the CSV has a `蜊呈･ｭ逕歔 or compatible column.
   - Confirm fallback `schools-data.js` has non-empty `graduates` values.
   - Hard refresh with the latest cache version.
 - Click logs do not appear:
