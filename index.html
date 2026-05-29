@@ -6,6 +6,7 @@
   <title>Ballet Map|留学‣入賞実績からバレエ教室を検索</title>
   <meta name="description" content="「指導方針や実績で選びたい」を叶えるバレエ教室検索ポータル。全国のスタジオを、留学実績・コンクール入賞歴・メソッド（ワガノワ等）で徹底比較。本気で上手くなりたい方、子供の習い事に最適なバレエスクールが見つかります。" />
   <link rel="canonical" href="https://ballet-class-search.com/" />
+  <meta name="robots" content="index,follow" />
   <meta property="og:title" content="Ballet Map|留学‣入賞実績からバレエ教室を検索" />
   <meta property="og:description" content="「指導方針や実績で選びたい」を叶えるバレエ教室検索ポータル。全国のスタジオを、留学実績・コンクール入賞歴・メソッド（ワガノワ等）で徹底比較。本気で上手くなりたい方、子供の習い事に最適なバレエスクールが見つかります。" />
   <meta property="og:url" content="https://ballet-class-search.com/" />
@@ -16,94 +17,367 @@
   <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png?v=20260518-2" />
   <link rel="apple-touch-icon" href="favicon.png?v=20260518-2" />
-  
-  <meta name="robots" content="index,follow" />
-<script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { roseSoft: "#fff1f5", roseLine: "#f9c7d6", roseMain: "#e85d8f", roseDeep: "#be2f67" } } } };
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: "#fbf7f0",
+            greige: "#eee7de",
+            roseMist: "#f8eeee",
+            roseSoft: "#f3dedd",
+            roseLine: "#e6d4ca",
+            roseMain: "#b98986",
+            roseDeep: "#7f2f3f",
+            bordeaux: "#6f2433",
+            charcoal: "#332f32",
+            navyDeep: "#18243a",
+            ink: "#332f32"
+          },
+          fontFamily: {
+            body: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
+            heading: ['"Noto Serif JP"', '"Yu Mincho"', '"Hiragino Mincho ProN"', 'serif'],
+            latin: ['"Cormorant Garamond"', '"Playfair Display"', 'Georgia', 'serif']
+          }
+        }
+      }
+    };
   </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
+    .font-heading { font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif; }
+    .font-latin { font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif; }
+  </style>
 </head>
-<body class="min-h-screen overflow-x-hidden bg-white text-slate-800">
-  <header class="border-b border-pink-100 bg-white">
-    <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p class="text-sm font-medium text-roseDeep">Ballet Map</p>
-          <h1 class="mt-1 text-3xl font-semibold text-slate-900 sm:text-4xl">バレエ教室検索</h1>
-          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">「指導方針や実績で選びたい」を叶えるバレエ教室検索ポータル。全国のスタジオを、留学実績・コンクール入賞歴・卒業生実績・メソッドで比較できます。</p>
+<body class="min-h-screen overflow-x-hidden bg-ivory font-body text-charcoal">
+  <header class="border-b border-roseLine bg-ivory">
+    <nav class="border-b border-roseLine/80 bg-white/90 backdrop-blur">
+      <div class="mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[1fr_auto_auto] lg:items-center lg:px-8">
+        <a href="#" class="min-w-0">
+          <span class="font-latin block text-2xl font-semibold leading-tight text-ink">Ballet Map</span>
+          <span class="mt-1 block text-xs font-medium text-roseDeep">実績で比較するバレエ教室検索</span>
+        </a>
+        <div class="flex flex-wrap gap-2 text-sm font-medium text-charcoal/80 lg:justify-center">
+          <a href="#can-check" class="rounded-md px-3 py-2 transition hover:bg-roseMist hover:text-bordeaux">検索できること</a>
+          <a href="#schools" class="rounded-md px-3 py-2 transition hover:bg-roseMist hover:text-bordeaux">教室一覧</a>
+          <a href="#methods" class="rounded-md px-3 py-2 transition hover:bg-roseMist hover:text-bordeaux">メソッド解説</a>
+          <a href="#articles" class="rounded-md px-3 py-2 transition hover:bg-roseMist hover:text-bordeaux">ガイドブック</a>
+          <a href="#listing" class="rounded-md px-3 py-2 transition hover:bg-roseMist hover:text-bordeaux">教室掲載について</a>
         </div>
-        <div class="rounded-md border border-pink-100 bg-roseSoft px-4 py-3 text-sm text-roseDeep">プレミアム掲載の教室を優先表示</div>
+        <a href="#search" class="inline-flex items-center justify-center rounded-md bg-navyDeep px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-bordeaux">教室を探す</a>
+      </div>
+    </nav>
+    <div class="relative overflow-hidden bg-greige">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.88),transparent_28%),linear-gradient(120deg,rgba(251,247,240,0.93),rgba(243,222,221,0.72),rgba(238,231,222,0.9))]"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-multiply" style="background-image: url('https://d.kuku.lu/j6nenp78j');"></div>
+      <div class="absolute -right-16 top-16 h-64 w-64 rounded-full border border-white/70"></div>
+      <div class="absolute bottom-8 left-8 h-28 w-72 rounded-[50%] border border-roseLine/80"></div>
+      <div class="relative mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
+        <div class="max-w-3xl">
+          <p class="font-latin text-base font-semibold tracking-[0.08em] text-bordeaux">Ballet Map</p>
+          <h1 class="font-heading mt-3 text-4xl font-semibold leading-tight text-ink sm:text-5xl lg:text-6xl">実績と指導方針で選ぶ、全国のバレエ教室検索</h1>
+          <p class="mt-5 max-w-2xl text-base leading-8 text-charcoal/80 sm:text-lg">
+            留学実績・コンクール入賞歴・卒業生進路・メソッドから、お子さまに合うバレエ教室を比較できます。
+          </p>
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href="#search" class="inline-flex items-center justify-center rounded-md bg-bordeaux px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-navyDeep">条件に合う教室を探す</a>
+            <a href="#can-check" class="inline-flex items-center justify-center rounded-md border border-roseLine bg-white/80 px-6 py-3 text-sm font-semibold text-bordeaux transition hover:bg-white">検索できる項目を見る</a>
+          </div>
+          <div class="mt-7 flex flex-wrap gap-2 text-xs font-semibold text-bordeaux">
+            <span class="rounded-full border border-roseLine bg-white/80 px-3 py-1.5">留学実績</span>
+            <span class="rounded-full border border-roseLine bg-white/80 px-3 py-1.5">コンクール実績</span>
+            <span class="rounded-full border border-roseLine bg-white/80 px-3 py-1.5">卒業生進路</span>
+            <span class="rounded-full border border-roseLine bg-white/80 px-3 py-1.5">メソッド比較</span>
+          </div>
+        </div>
+        <div class="rounded-lg border border-white/70 bg-white/80 p-5 shadow-xl shadow-bordeaux/10 backdrop-blur">
+          <p class="font-heading text-xl font-semibold text-ink">ぴったりが見つかるバレエ専門サイト</p>
+          <div class="mt-5 grid gap-3 text-sm leading-6 text-charcoal/75">
+            <div class="rounded-md border border-roseLine bg-ivory px-4 py-3">公式情報・公開情報をもとに比較項目を整理</div>
+            <div class="rounded-md border border-roseLine bg-ivory px-4 py-3">対象年齢、最寄り駅、料金情報までまとめて確認</div>
+            <div class="rounded-md border border-roseLine bg-ivory px-4 py-3">気になる教室は公式サイトで最新情報へ</div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <section class="border-b border-pink-100 pb-6">
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
-        <label class="block xl:col-span-2"><span class="text-sm font-medium text-slate-700">キーワード検索</span><input id="filterKeyword" type="text" placeholder="教室名、特徴、住所、最寄り駅、卒業生実績など" class="mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100" /></label>
+  <main class="bg-ivory">
+    <section id="search" class="scroll-mt-6 bg-ivory px-4 py-8 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl rounded-lg border border-roseLine bg-white p-5 shadow-xl shadow-bordeaux/5 sm:p-7">
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">Search</p>
+          <h2 class="font-heading mt-2 text-2xl font-semibold text-ink">条件を絞って教室を探す</h2>
+        </div>
+        <p id="resultCount" class="text-sm text-charcoal/70"></p>
       </div>
-      <details class="group mt-4 rounded-md border border-pink-100 bg-roseSoft/40">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-roseDeep"><span>詳細検索</span><svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" /></svg></summary>
-        <div class="grid gap-4 border-t border-pink-100 bg-white p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8">
-          <label class="block"><span class="text-sm font-medium text-slate-700">地域</span><select id="filterArea" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">メソッド</span><select id="filterMethod" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">対象年齢</span><select id="filterAge" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">留学国</span><select id="filterStudyCountry" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">留学先学校名</span><select id="filterStudySchool" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">入賞年</span><select id="filterContestYear" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">コンクール名</span><select id="filterContestName" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
-          <label class="block"><span class="text-sm font-medium text-slate-700">卒業生実績</span><select id="filterGraduates" class="filter-select mt-2 w-full rounded-md border border-pink-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-roseMain focus:ring-2 focus:ring-pink-100"></select></label>
+      <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <label class="block lg:col-span-2">
+          <span class="text-sm font-semibold text-ink">キーワード検索</span>
+          <input id="filterKeyword" type="text" placeholder="教室名、特徴、住所など" class="mt-2 w-full rounded-md border border-roseLine bg-ivory px-4 py-3 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft" />
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-ink">最寄り駅検索</span>
+          <input id="filterStation" type="text" placeholder="例: 表参道駅" class="mt-2 w-full rounded-md border border-roseLine bg-ivory px-4 py-3 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft" />
+        </label>
+        <label class="block"><span class="text-sm font-semibold text-ink">対象年齢</span><select id="filterAge" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-3 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+        <label class="block"><span class="text-sm font-semibold text-ink">メソッド</span><select id="filterMethod" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-3 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+      </div>
+
+      <details class="group mt-5 rounded-md border border-roseLine bg-roseMist">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-bordeaux">
+          <span>詳細検索</span>
+          <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="grid gap-4 border-t border-roseLine bg-white p-4 md:grid-cols-2 lg:grid-cols-3">
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">地域</span><select id="filterArea" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">留学国</span><select id="filterStudyCountry" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">留学先学校名</span><select id="filterStudySchool" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">入賞年</span><select id="filterContestYear" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">コンクール名</span><select id="filterContestName" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
+          <label class="block"><span class="text-sm font-medium text-charcoal/80">卒業生実績</span><select id="filterGraduates" class="filter-select mt-2 w-full rounded-md border border-roseLine bg-ivory px-3 py-2 text-sm outline-none transition focus:border-bordeaux focus:bg-white focus:ring-2 focus:ring-roseSoft"></select></label>
         </div>
       </details>
-      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p id="resultCount" class="text-sm text-slate-600"></p><button id="resetButton" class="inline-flex items-center justify-center rounded-md border border-pink-200 bg-white px-4 py-2 text-sm font-medium text-roseDeep transition hover:bg-roseSoft">条件をリセット</button></div>
+
+      <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <button id="searchButton" class="inline-flex items-center justify-center rounded-md bg-bordeaux px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-navyDeep">条件に合う教室を探す</button>
+        <button id="resetButton" class="inline-flex items-center justify-center rounded-md border border-roseLine bg-white px-4 py-2 text-sm font-semibold text-bordeaux transition hover:bg-roseMist">条件をリセット</button>
+      </div>
+      </div>
     </section>
 
-    <section class="py-6">
-      <div id="schoolList" class="grid min-w-0 gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <section id="schools" class="scroll-mt-6 bg-greige/45 px-4 py-10 sm:px-6 lg:px-8">
+      <div id="schoolList" class="mx-auto grid max-w-7xl min-w-0 gap-5 md:grid-cols-2 xl:grid-cols-3">
         <section id="initialSeoText" class="sr-only" aria-label="バレエ教室の静的テキスト一覧">
           <h2>バレエ教室一覧</h2>
-          <p>全国のバレエ教室を、地域、メソッド、対象年齢、留学実績、コンクール入賞歴、卒業生実績から検索できます。</p>
-          <a href="school_1.html">エトワールバレエの教室ページ</a>
-          <a href="school_2.html">ローズバレエの教室ページ</a>
-          <a href="school_3.html">クララバレエの教室ページ</a>
-          <a href="school_4.html">ルミエールバレエ埼玉の教室ページ</a>
-          <a href="school_5.html">ソレイユバレエ大阪の教室ページ</a>
-          <a href="school_6.html">ミモザバレエ京都の教室ページ</a>
-          <a href="school_7.html">アイリスバレエ兵庫の教室ページ</a>
-          <a href="school_8.html">エクラバレエ愛知の教室ページ</a>
-          <a href="school_9.html">シルフィードバレエ福岡の教室ページ</a>
-          <a href="school_10.html">オーロラバレエ北海道の教室ページ</a>
-          <a href="school_11.html">ステラバレエ宮城の教室ページ</a>
-          <a href="school_12.html">フローラバレエ広島の教室ページ</a>
-          <a href="school_13.html">ピルエットバレエ静岡の教室ページ</a>
+          <article><h3><a href="school_1.html">エトワールバレエの教室ページ</a></h3><p>東京、表参道駅、ワガノワ、キッズ・ジュニア・プロ・大人。東京都渋谷区神宮前1-2-3。初めてのお子様から大人まで丁寧に指導します。留学実績: ロシア ボリショイバレエ学校。卒業生情報: スプレッドシートの卒業生列から表示されます。コンクール実績: 2025 ローザンヌ国際バレエコンクール。</p></article>
+          <article><h3><a href="school_2.html">ローズバレエの教室ページ</a></h3><p>神奈川、横浜駅、RAD、キッズ・ジュニア。神奈川県横浜市中区元町4-5-6。姿勢改善や体幹強化にも向いた大人にも通いやすいスタジオ。留学実績: モナコ プリンセスグレースアカデミー。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_3.html">クララバレエの教室ページ</a></h3><p>千葉、船橋駅、チェケッティ、ジュニア・大人。千葉県船橋市本町7-8-9。経験者やプロ志望にも対応する本格派スクール。コンクール実績: 2025 YAGP。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_4.html">ルミエールバレエ埼玉の教室ページ</a></h3><p>埼玉、大宮駅、RAD、キッズ・ジュニア・大人。埼玉県さいたま市大宮区高鼻町1-2-3。美しい姿勢と表現力を育むスタジオ。留学実績: イギリス ロイヤルバレエ学校。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_5.html">ソレイユバレエ大阪の教室ページ</a></h3><p>大阪、梅田駅、ワガノワ、キッズ・ジュニア・プロ。大阪府大阪市北区梅田2-3-4。コンクールや留学を目指す生徒を支援します。留学実績: ロシア ワガノワバレエアカデミー。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_6.html">ミモザバレエ京都の教室ページ</a></h3><p>京都、京都駅、チェケッティ、ジュニア・大人。京都府京都市中京区烏丸通1-2。初心者の大人も始めやすい気品あるスタジオ。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_7.html">アイリスバレエ兵庫の教室ページ</a></h3><p>兵庫、三宮駅、パリ・オペラ座、キッズ・ジュニア・大人。兵庫県神戸市中央区三宮町3-4-5。フランスのエレガントなスタイルを学べます。留学実績: パリ・オペラ座バレエ学校。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_8.html">エクラバレエ愛知の教室ページ</a></h3><p>愛知、名古屋駅、バランシン、ジュニア・プロ・大人。愛知県名古屋市中村区名駅4-5-6。音楽性と芸術性を伸ばす実践的なレッスン。留学実績: アメリカ スクールオブアメリカンバレエ。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_9.html">シルフィードバレエ福岡の教室ページ</a></h3><p>福岡、天神駅、RAD、キッズ・ジュニア。福岡県福岡市中央区天神2-3-4。子どもの感性と健やかな身体を育てる教室。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_10.html">オーロラバレエ北海道の教室ページ</a></h3><p>北海道、札幌駅、ワガノワ、キッズ・ジュニア・大人。北海道札幌市中央区北1条西2-3。舞台に立つ喜びを通じて自信を育てます。留学実績: カナダ国立バレエ学校。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_11.html">ステラバレエ宮城の教室ページ</a></h3><p>宮城、青葉駅、大人。宮城県仙台市青葉区中央1-2-3。仕事帰りや休日に通いやすい大人向けスタジオ。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_12.html">フローラバレエ広島の教室ページ</a></h3><p>広島、広島駅、チェケッティ、キッズ・ジュニア・大人。広島県広島市中区紙屋町1-2-3。踊る楽しさを大切に基礎から応用まで学べます。留学実績: ドイツ ジョンクランコバレエ学校。 卒業生情報: 未設定。</p></article>
+          <article><h3><a href="school_13.html">ピルエットバレエ静岡の教室ページ</a></h3><p>静岡、静岡駅、RAD、キッズ・ジュニア・プロ・大人。静岡県静岡市葵区追手町1-2-3。情操教育から専門コースまで幅広く対応。留学実績: オーストラリアンバレエ学校。 卒業生情報: 未設定。</p></article>
         </section>
       </div>
-      <div id="emptyState" class="hidden rounded-md border border-pink-100 bg-roseSoft px-6 py-12 text-center"><p id="emptyTitle" class="text-base font-medium text-slate-800">条件に合う教室が見つかりませんでした。</p><p id="emptyText" class="mt-2 text-sm text-slate-600">絞り込み条件を変更して再検索してください。</p></div>
+
+      <div id="emptyState" class="mx-auto hidden max-w-7xl rounded-md border border-roseLine bg-roseMist px-6 py-12 text-center">
+        <p id="emptyTitle" class="text-base font-medium text-ink">条件に合う教室が見つかりませんでした。</p>
+        <p id="emptyText" class="mt-2 text-sm text-charcoal/70">絞り込み条件を変更して再検索してください。</p>
+      </div>
+    </section>
+
+    <section id="can-check" class="scroll-mt-6 bg-ivory px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">What You Can Search</p>
+        <div class="mt-3 grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <h2 class="font-heading text-3xl font-semibold text-ink">Ballet Mapで検索できること</h2>
+            <p class="mt-4 text-sm leading-7 text-charcoal/75">実績、指導方針、通いやすさを同じ目線で見比べられるように、教室情報を項目ごとに整理しています。</p>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">留学実績</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">国名や留学先学校名を確認できます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">コンクール入賞歴</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">入賞年やコンクール名で比較できます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">卒業生進路</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">卒業生実績のある教室を探せます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">指導メソッド</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">ワガノワ、RADなどの方針を見比べられます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">対象年齢</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">キッズ、ジュニア、大人向けを絞り込めます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm"><h3 class="font-semibold text-ink">クラス・料金</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">各教室のクラス情報を確認できます。</p></div>
+            <div class="rounded-md border border-roseLine bg-white p-4 shadow-sm sm:col-span-2 lg:col-span-3"><h3 class="font-semibold text-ink">最寄り駅・所在地</h3><p class="mt-2 text-sm leading-6 text-charcoal/70">通いやすさを検討しやすいよう、駅名や所在地をまとめています。</p></div>
+          </div>
+        </div>
+        <p class="mt-6 rounded-md border border-roseLine bg-roseMist px-4 py-3 text-sm leading-7 text-charcoal/75">掲載情報は、各教室の公式情報・公開情報をもとに整理しています。最新情報や体験レッスンの詳細は、各教室の公式サイトでご確認ください。</p>
+      </div>
+    </section>
+
+    <section id="methods" class="scroll-mt-6 bg-greige/50 px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">Methods</p>
+        <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <h2 class="font-heading text-3xl font-semibold text-ink">バレエのメソッド解説</h2>
+        </div>
+        <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">ロシア</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">ワガノワメソッド</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">旧ソビエト連邦で体系化されたロシア式バレエの教授法。アグリッピナ・ワガノワが確立。力強い表現と高い技術水準が特徴で、ボリショイやマリインスキーなど世界的バレエ団の基礎となっています。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">イギリス</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">RAD（英国ロイヤルアカデミーオブダンス）</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">1920年にロンドンで設立された世界最大のバレエ教育機関によるメソッド。段階的なグレード試験制度が特徴で、丁寧な基礎教育と音楽性を重視します。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">イタリア</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">チェケッティメソッド</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">イタリアの名教師エンリコ・チェケッティが確立した教授法。身体の正しい使い方と解剖学的アプローチが特徴で、怪我の予防と長期的な技術向上を重視します。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">フランス</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">パリ・オペラ座メソッド</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">世界最古のバレエ学校であるパリ・オペラ座バレエ学校の教授法。優雅さと洗練された表現力、フランス的な美意識を重視した指導スタイルです。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">アメリカ</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">バランシンスタイル</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">ジョージ・バランシンが確立したネオクラシカルバレエのスタイル。スピーディーで音楽的な動き、長い手足を活かしたラインの美しさが特徴です。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold text-bordeaux">各教室</p>
+            <h3 class="mt-2 text-lg font-semibold text-ink">総合・独自メソッド</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">特定のメソッドに限定せず、複数の教授法を組み合わせた独自のカリキュラムを持つ教室。生徒の個性や目標に合わせた柔軟な指導が特徴です。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="scroll-mt-6 bg-roseMist px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">About</p>
+        <div class="mt-3 grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <h2 class="font-heading text-3xl font-semibold text-ink">Ballet Mapバレエ教室検索ポータルについて</h2>
+          <div class="space-y-4 text-sm leading-7 text-charcoal/75 sm:text-base">
+            <p>本サイトは、全国のバレエ教室情報を検索・比較できるポータルサイトです。地域・メソッド・対象年齢などの条件で絞り込み、各教室の特徴や実績を詳しく確認できます。</p>
+            <p>ワガノワメソッド、RAD、チェケッティメソッド、パリ・オペラ座メソッド、バランシンスタイルなど、様々な指導法の教室を掲載。お子様の習い事選びから、プロを目指す方の教室探しまで幅広くサポートします。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="policy" class="scroll-mt-6 bg-ivory px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl rounded-lg border border-roseLine bg-white p-6 shadow-sm sm:p-7">
+        <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">Policy</p>
+        <h2 class="font-heading mt-3 text-3xl font-semibold text-ink">安心して使うための掲載方針</h2>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <article class="rounded-md border border-roseLine bg-ivory p-5">
+            <h3 class="text-base font-semibold text-ink">比較項目の透明性</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">地域、メソッド、対象年齢、留学実績、コンクール実績など、比較に使う項目を分けて表示します。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-ivory p-5">
+            <h3 class="text-base font-semibold text-ink">公式サイトでの最終確認</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">レッスン内容、料金、募集状況は変わる場合があります。申し込み前に各教室の公式情報をご確認ください。</p>
+          </article>
+          <article class="rounded-md border border-roseLine bg-ivory p-5">
+            <h3 class="text-base font-semibold text-ink">広告・おすすめ表示の扱い</h3>
+            <p class="mt-3 text-sm leading-6 text-charcoal/70">一部の教室はおすすめ掲載として優先表示される場合があります。クリック数は利用者向けには表示しません。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="articles" class="scroll-mt-6 bg-ivory px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">Guidebook</p>
+        <h2 class="font-heading mt-3 text-3xl font-semibold text-ink">バレエ教室選びのガイドブック</h2>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm"><p class="text-xs font-semibold text-bordeaux">準備中</p><h3 class="mt-2 text-lg font-semibold text-ink">留学実績の見方</h3><p class="mt-3 text-sm leading-6 text-charcoal/70">教室選びで確認したい留学先、サポート体制、年齢別の考え方を整理する予定です。</p></article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm"><p class="text-xs font-semibold text-bordeaux">準備中</p><h3 class="mt-2 text-lg font-semibold text-ink">コンクール実績の比較</h3><p class="mt-3 text-sm leading-6 text-charcoal/70">入賞歴を見るときに、件数だけでなく指導方針との相性も確認できる記事を用意します。</p></article>
+          <article class="rounded-md border border-roseLine bg-white p-5 shadow-sm"><p class="text-xs font-semibold text-bordeaux">準備中</p><h3 class="mt-2 text-lg font-semibold text-ink">メソッドの違い</h3><p class="mt-3 text-sm leading-6 text-charcoal/70">ワガノワ、RAD、チェケッティなどの特徴を、保護者にも分かりやすく解説する予定です。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="listing" class="scroll-mt-6 bg-roseMist px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-6 rounded-lg border border-roseLine bg-white p-6 shadow-sm sm:p-7 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-wide text-bordeaux">For Teachers</p>
+          <h2 class="font-heading mt-3 text-3xl font-semibold text-ink">バレエ教室の先生へ</h2>
+          <p class="mt-4 max-w-2xl text-sm leading-7 text-charcoal/75">Ballet Mapでは、教室の指導方針・実績・クラス情報を掲載できます。掲載申し込みページは準備中です。</p>
+        </div>
+        <a href="#listing" class="inline-flex items-center justify-center rounded-md bg-navyDeep px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-bordeaux">教室掲載について</a>
+      </div>
     </section>
   </main>
 
+  <footer class="border-t border-navyDeep bg-navyDeep text-white">
+    <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_0.8fr_1.4fr] lg:px-8">
+      <div>
+        <p class="font-latin text-2xl font-semibold">Ballet Map</p>
+        <p class="mt-3 max-w-md text-sm leading-6 text-white/70">全国のバレエ教室を地域・メソッド・実績で検索できるポータルサイト。</p>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-white">サイト内リンク</h2>
+        <div class="mt-4 grid gap-2 text-sm text-white/70">
+          <a href="#can-check" class="transition hover:text-white">検索できること</a>
+          <a href="#about" class="transition hover:text-white">サイトについて</a>
+          <a href="#methods" class="transition hover:text-white">メソッド解説</a>
+          <a href="#articles" class="transition hover:text-white">ガイドブック</a>
+          <a href="#policy" class="transition hover:text-white">掲載方針</a>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-white">地域から探す</h2>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a href="#schools" data-region-group="北海道・東北" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">北海道・東北</a>
+          <a href="#schools" data-region-group="関東" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">関東</a>
+          <a href="#schools" data-region-group="中部" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">中部</a>
+          <a href="#schools" data-region-group="関西" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">関西</a>
+          <a href="#schools" data-region-group="中国・四国" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">中国・四国</a>
+          <a href="#schools" data-region-group="九州・沖縄" class="rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white hover:text-navyDeep">九州・沖縄</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
   <div id="toast" class="fixed left-1/2 top-5 z-50 hidden w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-md border border-pink-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-lg"></div>
+
   <div id="modal" class="fixed inset-0 z-40 hidden">
     <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/45"></div>
     <div class="relative flex min-h-full items-center justify-center p-4">
       <article class="max-h-[92vh] min-w-0 w-full max-w-[calc(100vw-2rem)] overflow-x-hidden overflow-y-auto rounded-lg bg-white shadow-2xl sm:max-w-5xl">
-        <div class="relative"><img id="modalImage" src="" alt="" class="h-64 w-full rounded-t-lg object-cover sm:h-80" /><button id="closeModal" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl leading-none text-slate-700 shadow transition hover:bg-roseSoft" aria-label="閉じる">×</button></div>
+        <div class="relative">
+          <img id="modalImage" src="" alt="" class="h-64 w-full rounded-t-lg object-cover sm:h-80" />
+          <button id="closeModal" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl leading-none text-slate-700 shadow transition hover:bg-roseSoft" aria-label="閉じる">×</button>
+        </div>
         <div class="p-5 sm:p-7">
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div class="min-w-0"><div id="modalBadges" class="mb-3 flex flex-wrap gap-2"></div><h2 id="modalName" class="break-words text-2xl font-semibold text-slate-900"></h2><p id="modalMeta" class="mt-2 text-sm text-slate-600"></p></div><button id="officialButton" class="inline-flex w-full shrink-0 items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200 sm:w-auto">公式サイトを見る</button></div>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+              <div id="modalBadges" class="mb-3 flex flex-wrap gap-2"></div>
+              <h2 id="modalName" class="break-words text-2xl font-semibold text-slate-900"></h2>
+              <p id="modalMeta" class="mt-2 text-sm text-slate-600"></p>
+            </div>
+            <button id="officialButton" class="inline-flex w-full shrink-0 items-center justify-center rounded-md bg-roseMain px-5 py-3 text-sm font-semibold text-white transition hover:bg-roseDeep disabled:cursor-not-allowed disabled:bg-pink-200 sm:w-auto">公式サイトを見る</button>
+          </div>
           <div class="mt-6 grid gap-5">
-            <section class="rounded-md border border-pink-100 p-4"><h3 class="text-base font-semibold text-slate-900">基本情報</h3><dl class="mt-4 space-y-3 text-sm"><div><dt class="font-medium text-slate-700">最寄り駅</dt><dd id="modalNearestStation" class="mt-1 text-slate-600"></dd></div><div><dt class="font-medium text-slate-700">住所</dt><dd id="modalAddress" class="mt-1 text-slate-600"></dd></div></dl></section>
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">基本情報</h3>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="font-medium text-slate-700">最寄り駅</dt><dd id="modalNearestStation" class="mt-1 text-slate-600"></dd></div>
+                <div><dt class="font-medium text-slate-700">住所</dt><dd id="modalAddress" class="mt-1 text-slate-600"></dd></div>
+              </dl>
+            </section>
             <p id="modalDescription" class="leading-7 text-slate-700"></p>
             <section class="rounded-md border border-pink-100 p-4"><h3 class="text-base font-semibold text-slate-900">卒業生実績</h3><ul id="modalGraduateList" class="mt-4 space-y-2 text-sm text-slate-700"></ul></section>
             <section class="rounded-md border border-pink-100 p-4"><h3 class="text-base font-semibold text-slate-900">留学実績</h3><ul id="modalStudyList" class="mt-4 space-y-2 text-sm text-slate-700"></ul></section>
-            <section class="rounded-md border border-pink-100 p-4"><h3 class="text-base font-semibold text-slate-900">コンクール実績</h3><div class="mt-4 overflow-x-auto rounded-md border border-pink-100"><table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm"><thead class="bg-roseSoft text-roseDeep"><tr><th class="w-1/4 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">入賞年</th><th class="w-1/5 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">件数</th><th class="break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">コンクール名</th></tr></thead><tbody id="modalContestTable" class="divide-y divide-pink-100 bg-white"></tbody></table></div></section>
+            <section class="rounded-md border border-pink-100 p-4">
+              <h3 class="text-base font-semibold text-slate-900">コンクール実績</h3>
+              <div class="mt-4 overflow-x-auto rounded-md border border-pink-100">
+                <table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                  <thead class="bg-roseSoft text-roseDeep"><tr><th class="w-1/4 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">入賞年</th><th class="w-1/5 break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">件数</th><th class="break-words border-b border-pink-100 px-2 py-2 font-semibold sm:px-3 sm:py-3">コンクール名</th></tr></thead>
+                  <tbody id="modalContestTable" class="divide-y divide-pink-100 bg-white"></tbody>
+                </table>
+              </div>
+            </section>
             <section class="rounded-md border border-pink-100 p-4"><h3 class="text-base font-semibold text-slate-900">クラス・料金</h3><div class="mt-4"><img id="modalClassImage" src="" alt="クラス・料金スケジュール" class="hidden h-auto w-full rounded-md object-contain" /><p id="modalClassImageFallback" class="hidden text-sm text-slate-500">クラス情報は未設定です。</p></div></section>
           </div>
-          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p id="modalNotice" class="min-h-6 text-sm text-slate-600"></p></div>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p id="modalNotice" class="min-h-6 text-sm text-slate-600"></p>
+          </div>
         </div>
       </article>
     </div>
   </div>
-  <script src="schools-data.js?v=20260527-2"></script>
-  <script src="app.js?v=20260527-2"></script>
+
+  <script src="schools-data.js?v=20260529-1"></script>
+  <script src="app.js?v=20260529-1"></script>
 </body>
 </html>
