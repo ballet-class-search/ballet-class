@@ -1,0 +1,147 @@
+name: One-time SEO canonical publish
+
+on:
+  push:
+    paths:
+      - .github/workflows/seo-canonical-publish.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-seo-canonicals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply canonical and sitemap fixes
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          import textwrap
+
+          origin = "https://ballet-class-search.com"
+
+          def insert_after(text, marker, addition):
+              if addition in text:
+                  return text
+              if marker not in text:
+                  raise SystemExit(f"marker not found: {marker}")
+              return text.replace(marker, marker + addition, 1)
+
+          index = Path("index.html")
+          text = index.read_text(encoding="utf-8")
+          text = insert_after(
+              text,
+              '<link rel="canonical" href="https://ballet-class-search.com/" />',
+              '\n  <meta name="robots" content="index,follow" />',
+          )
+          index.write_text(text, encoding="utf-8")
+
+          for page in sorted(Path(".").glob("school_*.html")):
+              number = page.stem.split("_")[-1]
+              canonical = f'<link rel="canonical" href="{origin}/school_{number}.html" />'
+              robots = '<meta name="robots" content="index,follow" />'
+              text = page.read_text(encoding="utf-8")
+              if canonical not in text:
+                  script_pos = text.find('<script')
+                  if script_pos == -1:
+                      head_pos = text.find('</head>')
+                      if head_pos == -1:
+                          raise SystemExit(f"no insertion point in {page}")
+                      text = text[:head_pos] + f'  {canonical}\n  {robots}\n' + text[head_pos:]
+                  else:
+                      prefix = '' if text[script_pos - 1:script_pos] == '\n' else '\n'
+                      text = text[:script_pos] + f'{prefix}  {canonical}\n  {robots}\n  ' + text[script_pos:]
+              elif robots not in text:
+                  text = text.replace(canonical, canonical + f'\n  {robots}', 1)
+              text = text.replace('href="index.html"', 'href="/"')
+              page.write_text(text, encoding="utf-8")
+
+          sitemap_urls = [f"{origin}/"] + [f"{origin}/school_{i}.html" for i in range(1, 14)]
+          sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          for url in sitemap_urls:
+              sitemap.extend(["  <url>", f"    <loc>{url}</loc>", "  </url>"])
+          sitemap.append("</urlset>")
+          Path("sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
+          Path("robots.txt").write_text(
+              "User-agent: *\nAllow: /\n\nSitemap: https://ballet-class-search.com/sitemap.xml\n",
+              encoding="utf-8",
+          )
+
+          check = r'''
+          from pathlib import Path
+          import re
+          import sys
+          import xml.etree.ElementTree as ET
+
+          ROOT = Path(__file__).resolve().parents[1]
+          SITE_ORIGIN = "https://ballet-class-search.com"
+
+          def fail(message: str) -> None:
+              print(f"ERROR: {message}", file=sys.stderr)
+              raise SystemExit(1)
+
+          def read(path: str) -> str:
+              p = ROOT / path
+              if not p.exists():
+                  fail(f"{path} does not exist")
+              return p.read_text(encoding="utf-8")
+
+          def canonical(text: str, label: str) -> str:
+              match = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"\s*/?>', text)
+              if not match:
+                  fail(f"{label} is missing canonical")
+              return match.group(1)
+
+          def require(text: str, needle: str, label: str) -> None:
+              if needle not in text:
+                  fail(f"{label} is missing: {needle}")
+
+          def forbid(text: str, needle: str, label: str) -> None:
+              if needle in text:
+                  fail(f"{label} contains forbidden text: {needle}")
+
+          index = read("index.html")
+          require(index, 'rel="canonical" href="https://ballet-class-search.com/"', "index.html")
+          require(index, 'meta name="robots" content="index,follow"', "index.html")
+          forbid(index.lower(), "noindex", "index.html")
+          forbid(index, "Ballet Classe", "index.html")
+
+          urls = set()
+          tree = ET.parse(ROOT / "sitemap.xml")
+          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          for loc in tree.findall(".//sm:loc", ns):
+              if loc.text:
+                  urls.add(loc.text.strip())
+          expected = {f"{SITE_ORIGIN}/"} | {f"{SITE_ORIGIN}/school_{i}.html" for i in range(1, 14)}
+          if urls != expected:
+              fail(f"sitemap mismatch: {sorted(urls ^ expected)}")
+          require(read("robots.txt"), f"Sitemap: {SITE_ORIGIN}/sitemap.xml", "robots.txt")
+
+          for i in range(1, 14):
+              label = f"school_{i}.html"
+              text = read(label)
+              expected_url = f"{SITE_ORIGIN}/school_{i}.html"
+              if canonical(text, label) != expected_url:
+                  fail(f"{label} canonical must be {expected_url}")
+              require(text, 'meta name="robots" content="index,follow"', label)
+              forbid(text.lower(), "noindex", label)
+          print("Site integrity check passed.")
+          '''
+          Path("scripts/check_site_integrity.py").write_text(textwrap.dedent(check).lstrip(), encoding="utf-8")
+          Path(".github/workflows/seo-canonical-publish.yml").unlink(missing_ok=True)
+      - name: Validate SEO integrity
+        run: python scripts/check_site_integrity.py
+      - name: Commit published SEO fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html school_*.html sitemap.xml robots.txt scripts/check_site_integrity.py .github/workflows/seo-canonical-publish.yml
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Fix canonical sitemap SEO signals"
+            git push
+          fi
